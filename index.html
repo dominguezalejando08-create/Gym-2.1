@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOS FIT</title>
+<meta name="theme-color" content="#2563eb">
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI',Arial,Helvetica,sans-serif;
+  background:#f5f7fb;
+  color:#1f2937;
+}
+header{
+  background:linear-gradient(90deg,#2563eb,#3b82f6);
+  color:#fff;
+  padding:1.2rem;
+  text-align:center;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+}
+header h1{margin:0;font-size:1.8rem;}
+nav{display:flex;background:#1e293b;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+nav button{flex:1;border:none;background:#1e293b;color:#fff;padding:.9rem;font-weight:bold;font-size:.85rem;cursor:pointer;transition:0.3s;}
+nav button:hover{background:#2563eb}
+nav button.active{background:#2563eb}
+section{display:none;padding:1rem 1.5rem;animation:fadeIn 0.4s;}
+section.active{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.card{background:#fff;border-radius:12px;padding:1rem;margin-bottom:1rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);transition:0.3s;}
+.card:hover{box-shadow:0 6px 16px rgba(0,0,0,0.12)}
+.exercise{
+  display:grid;
+  grid-template-columns:264px 1fr auto;
+  gap:.5rem;
+  align-items:center;
+  cursor:pointer;
+  padding:.4rem 0;
+  border-bottom:1px solid #e2e8f0;
+}
+.exercise img{
+  width:264px;
+  height:264px;
+  border-radius:12px;
+  object-fit:contain;
+  background:#e5e7eb;
+  border:1px solid #cbd5e1;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+.exercise img:hover{transform:scale(1.05);}
+.progress{background:#e5e7eb;border-radius:10px;overflow:hidden;margin:.5rem 0;}
+.progress-bar{height:20px;background:#22c55e;color:#fff;font-size:.75rem;font-weight:bold;text-align:center;line-height:20px;transition:0.4s;}
+label{display:block;margin:.4rem 0;font-size:.85rem;}
+input,select,button{padding:.5rem;border-radius:6px;border:1px solid #cbd5e1;width:100%;font-size:.85rem;}
+button.save{background:#22c55e;color:#fff;border:none;font-weight:bold;margin-top:.5rem;cursor:pointer;transition:0.3s;}
+button.save:hover{background:#16a34a}
+button.small{padding:2px 6px;font-size:0.7rem;margin-left:4px;cursor:pointer;border:none;border-radius:4px;transition:0.2s;}
+button.small.modify{background:#fbbf24;color:#fff;}
+button.small.delete{background:#ef4444;color:#fff;}
+button.small.modify:hover{background:#f59e0b;}
+button.small.delete:hover{background:#dc2626;}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:.7rem;}
+.day{border:1px solid #cbd5f5;padding:6px 0;border-radius:6px;text-align:center;background:#f1f5f9;transition:0.3s;}
+.day.done{background:#22c55e;color:#fff;}
+#temporizador{display:none;text-align:center;font-weight:bold;font-size:1rem;color:#2563eb;margin-bottom:1rem;}
+#rutinas{max-height:none;overflow-y:visible;}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🏋️ MONOS FITNESS 🐵</h1>
+</header>
+
+<nav>
+<button class="active" data-section="semana">Semana</button>
+<button data-section="rutina">Rutina</button>
+<button data-section="calendario">Calendario</button>
+<button data-section="progreso">Progreso</button>
+</nav>
+
+<section id="semana" class="active">
+<h2>📅 Vista semanal</h2>
+<button class="save" onclick="reiniciarSemana()">🔄 Reiniciar semana</button>
+<button class="save" onclick="borrarRutinas()">🗑️ Borrar todas las rutinas</button>
+<div id="vistaSemana"></div>
+</section>
+
+<section id="rutina">
+<h2>➕ Rutina por día</h2>
+<div class="card">
+<label>Día
+<select id="diaRutina">
+<option>1</option><option>2</option><option>3</option>
+<option>4</option><option>5</option><option>6</option>
+</select>
+</label>
+<label>Ejercicio <input id="nombreEj"></label>
+<label>Series x Reps <input id="series"></label>
+<label>Imagen/GIF (opcional) <input type="file" id="imgFile" accept="image/png,image/jpeg,image/gif"></label>
+<button class="save" id="btnAgregar">Agregar ejercicio</button>
+</div>
+<div id="temporizador"></div> 
+<div id="rutinas"></div>
+</section>
+
+<section id="calendario">
+<h2>📆 Calendario anual</h2>
+<div class="card">
+<div class="progress">
+  <div id="avanceAnual" class="progress-bar"></div>
+</div>
+<p><strong>Avance:</strong> <span id="textoAvance">0 días</span></p>
+<button class="save" onclick="reiniciarCalendario()">🔄 Reiniciar calendario</button>
+</div>
+<div id="calendar"></div>
+</section>
+
+<section id="progreso">
+<h2>📊 Registro corporal</h2>
+<div class="card">
+  <label>Peso (kg)<input id="peso" type="number" step="0.1"></label>
+  <label>Cintura (cm)<input id="cintura" type="number" step="0.1"></label>
+  <label>Cadera (cm)<input id="cadera" type="number" step="0.1"></label>
+  <label>Grasa (%)<input id="grasa" type="number" step="0.1"></label>
+  <label>Músculo (%)<input id="musculo" type="number" step="0.1"></label>
+  <button class="save" onclick="guardarProgreso()">💾 Guardar progreso</button>
+</div>
+<div class="card">
+<h3>📈 Historial</h3>
+<ul id="historial"></ul>
+</div>
+</section>
+
+<script>
+// ---------------- NAVEGACIÓN ----------------
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.getElementById(btn.dataset.section).classList.add('active');
+    btn.classList.add('active');
+  };
+});
+
+// ---------------- RUTINAS ----------------
+function resizeImage(file, callback) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 264;
+      canvas.height = 264;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      callback(canvas.toDataURL('image/jpeg', 0.7));
+    }
+    img.src = e.target.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+function marcarHoyEnCalendario(){
+  const h=new Date();
+  const key=`${h.getFullYear()}-${h.getMonth()+1}-${h.getDate()}`;
+  const c=JSON.parse(localStorage.getItem('calendar'))||{};
+  c[key]=true;
+  localStorage.setItem('calendar',JSON.stringify(c));
+}
+
+function toggleDone(d,i){
+  const r=JSON.parse(localStorage.getItem('rutinas'));
+  r[d][i].done=!r[d][i].done;
+  localStorage.setItem('rutinas',JSON.stringify(r));
+  if(r[d].every(e=>e.done)) marcarHoyEnCalendario();
+  renderRutinas(); renderSemana(); buildCalendar();
+}
+
+function renderRutinas(){
+  rutinas.innerHTML='';
+  const r=JSON.parse(localStorage.getItem('rutinas'))||{};
+  Object.keys(r).forEach(d=>{
+    const hechos = r[d].filter(e=>e.done).length;
+    const p = Math.round(hechos/r[d].length*100)||0;
+    const dayCard = document.createElement('div'); dayCard.className='card';
+    const header = document.createElement('div');
+    header.style.cursor='pointer'; header.style.display='flex';
+    header.style.justifyContent='space-between'; header.style.alignItems='center';
+    header.style.padding='.5rem 0'; header.style.fontWeight='bold';
+    header.innerHTML = `<span>Día ${d}</span> <span>▲</span>`;
+    const exercisesContainer = document.createElement('div');
+    exercisesContainer.style.display='none'; exercisesContainer.style.marginTop='.5rem';
+    const progDiv = document.createElement('div');
+    progDiv.className='progress';
+    progDiv.innerHTML=`<div class="progress-bar" style="width:${p}%">${p}%</div>`;
+    exercisesContainer.appendChild(progDiv);
+
+    r[d].forEach((e,i)=>{
+      const ex=document.createElement('div'); ex.className='exercise';
+      const imgTag = e.img ? `<img src="${e.img}">` : `<div style="width:264px;height:264px;background:#e5e7eb;border-radius:12px;"></div>`;
+      ex.innerHTML=`${imgTag}<div>${e.nombre}<br>${e.series}</div>
+        <input type="checkbox" ${e.done?'checked':''}>
+        <button class="small modify">✏️</button>
+        <button class="small delete">🗑️</button>`;
+      
+      const checkbox = ex.querySelector('input[type="checkbox"]');
+      checkbox.onchange = ()=>toggleDone(d,i);
+      checkbox.onclick = (ev)=>ev.stopPropagation();
+
+      const btnMod = ex.querySelector('button.modify');
+      btnMod.onclick = (ev)=>{ ev.stopPropagation(); modificarEjercicio(d,i); };
+
+      const btnDel = ex.querySelector('button.delete');
+      btnDel.onclick = (ev)=>{
+        ev.stopPropagation();
+        if(confirm('¿Deseas eliminar este ejercicio?')){
+          r[d].splice(i,1);
+          localStorage.setItem('rutinas', JSON.stringify(r));
+          renderRutinas(); renderSemana(); buildCalendar();
+        }
+      };
+
+      ex.addEventListener('click', (event)=>{
+        if(event.target.type !== 'checkbox' && !event.target.classList.contains('modify') && !event.target.classList.contains('delete')) iniciarDescanso();
+      });
+
+      exercisesContainer.appendChild(ex);
+    });
+
+    header.onclick = ()=>{
+      if(exercisesContainer.style.display==='none'){
+        exercisesContainer.style.display='block';
+        header.querySelector('span:last-child').textContent='▼';
+      } else {
+        exercisesContainer.style.display='none';
+        header.querySelector('span:last-child').textContent='▲';
+      }
+    };
+
+    dayCard.appendChild(header); dayCard.appendChild(exercisesContainer);
+    rutinas.appendChild(dayCard);
+  });
+}
+
+function modificarEjercicio(dia,index){
+  const r=JSON.parse(localStorage.getItem('rutinas'));
+  const ej=r[dia][index];
+  diaRutina.value=dia; nombreEj.value=ej.nombre; series.value=ej.series;
+  btnAgregar.textContent="💾 Guardar cambios";
+  btnAgregar.onclick = ()=>{
+    if(!nombreEj.value||!series.value){alert('Completa nombre y series'); return;}
+    ej.nombre=nombreEj.value; ej.series=series.value;
+    const file = imgFile.files[0];
+    const guardar = (imgData)=>{
+      ej.img = imgData || ej.img;
+      localStorage.setItem('rutinas',JSON.stringify(r));
+      nombreEj.value=''; series.value=''; imgFile.value='';
+      btnAgregar.textContent="Agregar ejercicio";
+      btnAgregar.onclick = agregarEjercicioDefault;
+      renderRutinas(); renderSemana(); buildCalendar();
+    };
+    if(file){
+      resizeImage(file, guardar);
+    } else guardar('');
+  };
+}
+
+function borrarRutinas(){if(confirm('¿Deseas eliminar todas las rutinas de los 6 días?')){localStorage.removeItem('rutinas'); renderRutinas(); renderSemana(); buildCalendar();}}
+
+function agregarEjercicioDefault(){
+  const dia = diaRutina.value;
+  const r = JSON.parse(localStorage.getItem('rutinas'))||{};
+  r[dia] = r[dia]||[];
+  const nombre = nombreEj.value.trim(); 
+  const ser = series.value.trim();
+  if(!nombre || !ser){alert('Completa nombre y series'); return;}
+  
+  const file = imgFile.files[0];
+  const guardar = (imgData)=>{
+    r[dia].push({nombre, series:ser, img: imgData||'', done:false});
+    localStorage.setItem('rutinas', JSON.stringify(r));
+    nombreEj.value=''; series.value=''; imgFile.value='';
+    renderRutinas(); renderSemana(); buildCalendar();
+  };
+
+  if(file){ 
+    resizeImage(file, guardar); 
+  } else guardar('');
+}
+btnAgregar.onclick = agregarEjercicioDefault;
+
+function renderSemana(){
+  vistaSemana.innerHTML=''; const r=JSON.parse(localStorage.getItem('rutinas'))||{};
+  for(let d=1;d<=6;d++){ const ejercicios = r[d]||[]; const t = ejercicios.length; const h = ejercicios.filter(e=>e.done).length; const p = t?Math.round(h/t*100):0;
+    vistaSemana.innerHTML+=`<div class="card"><strong>Día ${d}</strong><div class="progress"><div class="progress-bar" style="width:${p}%">${p}%</div></div></div>`;
+  }
+}
+function reiniciarSemana(){if(confirm('¿Deseas reiniciar todas las rutinas de la semana?')){const r=JSON.parse(localStorage.getItem('rutinas'))||{};Object.keys(r).forEach(d=>r[d].forEach(e=>e.done=false)); localStorage.setItem('rutinas',JSON.stringify(r)); renderRutinas(); renderSemana(); buildCalendar();}}
+
+function buildCalendar(){
+  calendar.innerHTML=''; const year=new Date().getFullYear(); const marks=JSON.parse(localStorage.getItem('calendar'))||{}; const total=Object.keys(marks).length;
+  avanceAnual.style.width=Math.round(total/365*100)+'%'; textoAvance.textContent=total+' días';
+  for(let m=0;m<12;m++){ const card=document.createElement('div'); card.className='card'; card.innerHTML=`<h3>${new Date(year,m).toLocaleString('es',{month:'long'}).toUpperCase()}</h3>`; const grid=document.createElement('div'); grid.className='calendar';
+    const days=new Date(year,m+1,0).getDate();
+    for(let d=1;d<=days;d++){ const key=`${year}-${m+1}-${d}`; const cell=document.createElement('div'); cell.className='day'+(marks[key]?' done':''); cell.textContent=d; grid.appendChild(cell);}
+    card.appendChild(grid); calendar.appendChild(card);
+  }
+}
+function reiniciarCalendario(){if(confirm('¿Borrar calendario y avance anual?')){localStorage.removeItem('calendar'); avanceAnual.style.width='0%'; textoAvance.textContent='0 días'; buildCalendar();}}
+
+function guardarProgreso(){
+  const pesoVal=peso.value,cinturaVal=cintura.value,caderaVal=cadera.value,grasaVal=grasa.value,musculoVal=musculo.value;
+  if(!pesoVal&&!cinturaVal&&!caderaVal&&!grasaVal&&!musculoVal){alert('Ingresa al menos un dato'); return;}
+  const arr=JSON.parse(localStorage.getItem('progreso'))||[];
+  arr.push({fecha:new Date().toLocaleDateString(),peso:pesoVal,cintura:cinturaVal,cadera:caderaVal,grasa:grasaVal,musculo:musculoVal});
+  localStorage.setItem('progreso',JSON.stringify(arr));
+  peso.value='';cintura.value='';cadera.value='';grasa.value='';musculo.value='';
+  cargarHistorial();
+}
+function cargarHistorial(){const arr=JSON.parse(localStorage.getItem('progreso'))||[]; historial.innerHTML=''; arr.forEach((r,i)=>{const li=document.createElement('li'); li.innerHTML=`${r.fecha} — Peso: ${r.peso||'-'} kg | Cintura: ${r.cintura||'-'} cm | Cadera: ${r.cadera||'-'} cm | Grasa: ${r.grasa||'-'} % | Músculo: ${r.musculo||'-'} %
+<button class="small modify" onclick="modificarProgreso(${i})">✏️</button>
+<button class="small delete" onclick="eliminarProgreso(${i})">🗑️</button>`; historial.appendChild(li); });}
+function modificarProgreso(index){const arr=JSON.parse(localStorage.getItem('progreso'))||[]; const r=arr[index]; peso.value=r.peso;cintura.value=r.cintura;cadera.value=r.cadera;grasa.value=r.grasa;musculo.value=r.musculo;
+  let btnGuardar=document.querySelector('#progreso .card button.save.modificar');
+  if(!btnGuardar){btnGuardar=document.createElement('button'); btnGuardar.className="save modificar"; btnGuardar.textContent="💾 Guardar cambios"; document.querySelector('#progreso .card').appendChild(btnGuardar);}
+  btnGuardar.onclick=()=>{
+    r.peso=peso.value;r.cintura=cintura.value;r.cadera=cadera.value;r.grasa=grasa.value;r.musculo=musculo.value;
+    localStorage.setItem('progreso',JSON.stringify(arr)); cargarHistorial();
+    peso.value='';cintura.value='';cadera.value='';grasa.value='';musculo.value=''; btnGuardar.remove();
+  };
+}
+function eliminarProgreso(index){const arr=JSON.parse(localStorage.getItem('progreso'))||[]; if(confirm("¿Deseas eliminar este registro de progreso?")){arr.splice(index,1); localStorage.setItem('progreso',JSON.stringify(arr)); cargarHistorial();}}
+
+function iniciarDescanso(){const cont=document.getElementById('temporizador'); let tiempo=3; cont.style.display='block'; cont.textContent=`Descanso: ${tiempo} s`; const interval=setInterval(()=>{tiempo--; if(tiempo>0){cont.textContent=`Descanso: ${tiempo} s`; } else{ clearInterval(interval); cont.textContent='¡Descanso terminado! ⏱️'; setTimeout(()=>cont.style.display='none',2000); } },1000);}
+
+// ---------------- INIT ----------------
+renderRutinas(); renderSemana(); buildCalendar(); cargarHistorial();
+</script>
+</body>
+</html>
