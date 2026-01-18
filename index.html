@@ -437,8 +437,8 @@ function iniciarDescanso(){const cont=document.getElementById('temporizador'); l
 function exportarDatos(){
   const data = {
     rutinas: JSON.parse(localStorage.getItem('rutinas')) || {},
-    calendar: JSON.parse(localStorage.getItem('calendar')) || {},
-    progreso: JSON.parse(localStorage.getItem('progreso')) || [],
+  //  calendar: JSON.parse(localStorage.getItem('calendar')) || {},
+ //   progreso: JSON.parse(localStorage.getItem('progreso')) || [],
     dieta28: JSON.parse(localStorage.getItem('dieta28')) || {}
   };
 
@@ -471,8 +471,8 @@ document.getElementById('archivoImportar').onchange = function(){
       const data = JSON.parse(e.target.result);
 
       if(data.rutinas) localStorage.setItem('rutinas', JSON.stringify(data.rutinas));
-      if(data.calendar) localStorage.setItem('calendar', JSON.stringify(data.calendar));
-      if(data.progreso) localStorage.setItem('progreso', JSON.stringify(data.progreso));
+    //  if(data.calendar) localStorage.setItem('calendar', JSON.stringify(data.calendar));
+    //  if(data.progreso) localStorage.setItem('progreso', JSON.stringify(data.progreso));
       if(data.dieta28) localStorage.setItem('dieta28', JSON.stringify(data.dieta28));
 
       alert('✅ Datos importados correctamente');
