@@ -176,16 +176,17 @@ button.small.delete:hover{background:#dc2626;}
 
 
 // ---------------- NAVEGACIÓN ----------------
-document.querySelectorAll('nav button').forEach(btn=>{
-  btn.onclick=()=>{
+
+
+
+document.querySelectorAll('nav button[data-section]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
     document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('nav button[data-section]').forEach(b=>b.classList.remove('active'));
     document.getElementById(btn.dataset.section).classList.add('active');
     btn.classList.add('active');
-  };
+  });
 });
-
-
 
 // ---------- DIETA ----------
 function initDieta(){
@@ -433,16 +434,6 @@ function iniciarDescanso(){const cont=document.getElementById('temporizador'); l
 
 
 
-
-// ---------------- INIT ----------------
-renderRutinas(); renderSemana(); buildCalendar(); cargarHistorial();
-
-
-
-
-
-
-// --------- EXPORTAR / IMPORTAR DATOS ---------
 function exportarDatos(){
   const data = {
     rutinas: JSON.parse(localStorage.getItem('rutinas')) || {},
@@ -451,18 +442,26 @@ function exportarDatos(){
     dieta28: JSON.parse(localStorage.getItem('dieta28')) || {}
   };
 
-  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  a.href = url;
   a.download = 'monos_fit_backup.json';
+  document.body.appendChild(a);
   a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
+// -------- IMPORTAR --------
 function importarDatos(){
   document.getElementById('archivoImportar').click();
 }
 
-document.getElementById('archivoImportar').addEventListener('change', function(){
+document.getElementById('archivoImportar').onchange = function(){
   const file = this.files[0];
   if(!file) return;
 
@@ -471,10 +470,10 @@ document.getElementById('archivoImportar').addEventListener('change', function()
     try{
       const data = JSON.parse(e.target.result);
 
-      if(data.rutinas) localStorage.setItem('rutinas',JSON.stringify(data.rutinas));
-      if(data.calendar) localStorage.setItem('calendar',JSON.stringify(data.calendar));
-      if(data.progreso) localStorage.setItem('progreso',JSON.stringify(data.progreso));
-      if(data.dieta28) localStorage.setItem('dieta28',JSON.stringify(data.dieta28));
+      if(data.rutinas) localStorage.setItem('rutinas', JSON.stringify(data.rutinas));
+      if(data.calendar) localStorage.setItem('calendar', JSON.stringify(data.calendar));
+      if(data.progreso) localStorage.setItem('progreso', JSON.stringify(data.progreso));
+      if(data.dieta28) localStorage.setItem('dieta28', JSON.stringify(data.dieta28));
 
       alert('✅ Datos importados correctamente');
       location.reload();
@@ -482,8 +481,12 @@ document.getElementById('archivoImportar').addEventListener('change', function()
       alert('❌ Archivo inválido');
     }
   };
+
   reader.readAsText(file);
-});
+};
+
+// ---------------- INIT ----------------
+renderRutinas(); renderSemana(); buildCalendar(); cargarHistorial();
 
 
 </script>
