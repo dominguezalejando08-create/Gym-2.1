@@ -77,6 +77,7 @@ button.small.delete:hover{background:#dc2626;}
 <button class="active" data-section="semana">Semana</button>
 <button data-section="rutina">Rutina</button>
 <button data-section="calendario">Calendario</button>
+<button data-section="dieta">Dieta</button>
 <button data-section="progreso">Progreso</button>
 </nav>
 
@@ -104,6 +105,40 @@ button.small.delete:hover{background:#dc2626;}
 <div id="temporizador"></div> 
 <div id="rutinas"></div>
 </section>
+
+
+<!-- ================== DIETA ================== -->
+<section id="dieta">
+<h2>🍽️ Plan de dieta (28 días)</h2>
+
+<div class="card">
+<h3>Menú A</h3>
+<label>Desayuno <input id="A_desayuno"></label>
+<label>Snack 1 <input id="A_snack1"></label>
+<label>Comida <input id="A_comida"></label>
+<label>Snack 2 <input id="A_snack2"></label>
+<label>Cena <input id="A_cena"></label>
+
+<hr>
+
+<h3>Menú B</h3>
+<label>Desayuno <input id="B_desayuno"></label>
+<label>Snack 1 <input id="B_snack1"></label>
+<label>Comida <input id="B_comida"></label>
+<label>Snack 2 <input id="B_snack2"></label>
+<label>Cena <input id="B_cena"></label>
+
+<button class="save" onclick="guardarMenusDieta()">💾 Guardar menús</button>
+</div>
+
+<div class="card">
+<h3>📅 Selección de menú por día</h3>
+<div class="calendar" id="planDieta28"></div>
+</div>
+
+<div id="vistaDietaHoy"></div>
+</section>
+
 
 <section id="calendario">
 <h2>📆 Calendario anual</h2>
@@ -134,6 +169,8 @@ button.small.delete:hover{background:#dc2626;}
 </section>
 
 <script>
+
+
 // ---------------- NAVEGACIÓN ----------------
 document.querySelectorAll('nav button').forEach(btn=>{
   btn.onclick=()=>{
@@ -143,6 +180,61 @@ document.querySelectorAll('nav button').forEach(btn=>{
     btn.classList.add('active');
   };
 });
+
+
+
+// ---------- DIETA ----------
+function initDieta(){
+  const data=JSON.parse(localStorage.getItem('dieta28'))||{menuA:{},menuB:{},plan:{}};
+  for(let i=1;i<=28;i++) if(!data.plan[i]) data.plan[i]='A';
+  localStorage.setItem('dieta28',JSON.stringify(data));
+  renderPlanDieta();renderDietaHoy();
+}
+initDieta();
+
+function guardarMenusDieta(){
+  const d=JSON.parse(localStorage.getItem('dieta28'));
+  d.menuA={desayuno:A_desayuno.value,snack1:A_snack1.value,comida:A_comida.value,snack2:A_snack2.value,cena:A_cena.value};
+  d.menuB={desayuno:B_desayuno.value,snack1:B_snack1.value,comida:B_comida.value,snack2:B_snack2.value,cena:B_cena.value};
+  localStorage.setItem('dieta28',JSON.stringify(d));
+  renderDietaHoy();
+}
+
+function renderPlanDieta(){
+  planDieta28.innerHTML='';
+  const d=JSON.parse(localStorage.getItem('dieta28'));
+  for(let i=1;i<=28;i++){
+    const c=document.createElement('div');
+    c.className='day';
+    c.textContent=i+'\n'+d.plan[i];
+    c.onclick=()=>{
+      d.plan[i]=d.plan[i]==='A'?'B':'A';
+      localStorage.setItem('dieta28',JSON.stringify(d));
+      renderPlanDieta();renderDietaHoy();
+    };
+    planDieta28.appendChild(c);
+  }
+}
+
+function renderDietaHoy(){
+  vistaDietaHoy.innerHTML='';
+  const d=JSON.parse(localStorage.getItem('dieta28'));
+  const hoy=((new Date().getDate()-1)%28)+1;
+  const m=d.plan[hoy]==='A'?d.menuA:d.menuB;
+  vistaDietaHoy.innerHTML=`
+  <div class="card">
+  <h3>Día ${hoy} – Menú ${d.plan[hoy]}</h3>
+  🍳 ${m.desayuno||'-'}<br>
+  🥪 ${m.snack1||'-'}<br>
+  🍽️ ${m.comida||'-'}<br>
+  🍎 ${m.snack2||'-'}<br>
+  🌙 ${m.cena||'-'}
+  </div>`;
+}
+
+
+
+
 
 // ---------------- RUTINAS ----------------
 function resizeImage(file, callback) {
@@ -334,6 +426,9 @@ function modificarProgreso(index){const arr=JSON.parse(localStorage.getItem('pro
 function eliminarProgreso(index){const arr=JSON.parse(localStorage.getItem('progreso'))||[]; if(confirm("¿Deseas eliminar este registro de progreso?")){arr.splice(index,1); localStorage.setItem('progreso',JSON.stringify(arr)); cargarHistorial();}}
 
 function iniciarDescanso(){const cont=document.getElementById('temporizador'); let tiempo=3; cont.style.display='block'; cont.textContent=`Descanso: ${tiempo} s`; const interval=setInterval(()=>{tiempo--; if(tiempo>0){cont.textContent=`Descanso: ${tiempo} s`; } else{ clearInterval(interval); cont.textContent='¡Descanso terminado! ⏱️'; setTimeout(()=>cont.style.display='none',2000); } },1000);}
+
+
+
 
 // ---------------- INIT ----------------
 renderRutinas(); renderSemana(); buildCalendar(); cargarHistorial();
