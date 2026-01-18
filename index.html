@@ -79,6 +79,10 @@ button.small.delete:hover{background:#dc2626;}
 <button data-section="calendario">Calendario</button>
 <button data-section="dieta">Dieta</button>
 <button data-section="progreso">Progreso</button>
+<button class="save" onclick="exportarDatos()">📤 Exportar datos</button>
+<button class="save" onclick="importarDatos()">📥 Importar datos</button>
+<input type="file" id="archivoImportar" accept=".json" style="display:none">
+
 </nav>
 
 <section id="semana" class="active">
@@ -432,6 +436,63 @@ function iniciarDescanso(){const cont=document.getElementById('temporizador'); l
 
 // ---------------- INIT ----------------
 renderRutinas(); renderSemana(); buildCalendar(); cargarHistorial();
+
+
+
+
+
+
+// --------- EXPORTAR / IMPORTAR DATOS ---------
+function exportarDatos(){
+  const data = {
+    rutinas: JSON.parse(localStorage.getItem('rutinas')) || {},
+    calendar: JSON.parse(localStorage.getItem('calendar')) || {},
+    progreso: JSON.parse(localStorage.getItem('progreso')) || [],
+    dieta28: JSON.parse(localStorage.getItem('dieta28')) || {}
+  };
+
+  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'monos_fit_backup.json';
+  a.click();
+}
+
+function importarDatos(){
+  document.getElementById('archivoImportar').click();
+}
+
+document.getElementById('archivoImportar').addEventListener('change', function(){
+  const file = this.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const data = JSON.parse(e.target.result);
+
+      if(data.rutinas) localStorage.setItem('rutinas',JSON.stringify(data.rutinas));
+      if(data.calendar) localStorage.setItem('calendar',JSON.stringify(data.calendar));
+      if(data.progreso) localStorage.setItem('progreso',JSON.stringify(data.progreso));
+      if(data.dieta28) localStorage.setItem('dieta28',JSON.stringify(data.dieta28));
+
+      alert('✅ Datos importados correctamente');
+      location.reload();
+    }catch(err){
+      alert('❌ Archivo inválido');
+    }
+  };
+  reader.readAsText(file);
+});
+
+
 </script>
+
+
+
+
+
+
+
 </body>
 </html>
