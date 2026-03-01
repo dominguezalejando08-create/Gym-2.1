@@ -46,7 +46,6 @@
         .progress-container { background: rgba(0,0,0,0.05); border-radius: 15px; height: 12px; margin-bottom: 15px; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; transition: 0.6s; }
         
-        /* ESTILO FRASE EN HEADER */
         #frase-momento { font-style: italic; font-size: 0.85rem; color: rgba(255,255,255,0.9); text-align: center; margin-top: 12px; padding: 0 15px; line-height: 1.3; font-weight: 300; }
     </style>
 </head>
@@ -101,21 +100,24 @@
 <section id="ajustes"><div class="card"><h3>👤 Socio</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button></div><div class="card"><h3>⚙️ Sistema</h3><button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button></div></section>
 
 <script>
-// CONTROL DE PESTAÑA ÚNICA
+// BROADCAST PARA PESTAÑA ÚNICA
 const bc = new BroadcastChannel('monis_fit_channel');
-bc.postMessage('nueva_pestaña');
-bc.onmessage = (ev) => {
-    if (ev.data === 'nueva_pestaña') bc.postMessage('activa');
-    if (ev.data === 'activa') { alert("App ya abierta en otra pestaña."); window.close(); }
+bc.postMessage('ping');
+bc.onmessage = (e) => {
+    if(e.data === 'ping') bc.postMessage('pong');
+    if(e.data === 'pong') { alert("App ya abierta."); window.close(); }
 };
 
 let DB = { tema: 'niña', socio: "", diaActual: 1, rutinas: {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}, dieta: {menuA:{},menuB:{}}, suplementos: [], evo: [] };
-const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave del éxito.", "Fuerte es quien no se rinde.", "Cada gota de sudor cuenta."];
+const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Fuerte es quien no se rinde.", "Cada gota de sudor cuenta."];
 
-function save() { localStorage.setItem('MONIS_FIT_PRO_V5', JSON.stringify(DB)); }
+// LLAVE ÚNICA PARA ESTA VERSIÓN
+const STORAGE_KEY = 'MONIS_FIT_FINAL';
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
 
 function load() {
-    const data = localStorage.getItem('MONIS_FIT_PRO_V5');
+    const data = localStorage.getItem(STORAGE_KEY);
     if(data) {
         DB = JSON.parse(data);
         if(DB.socio) {
@@ -178,7 +180,6 @@ function renderEntrenamiento() {
 }
 
 function marcarEjercicio(idx) { DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done; save(); renderEntrenamiento(); }
-
 function reiniciarSemana() {
     DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
     for(let d in DB.rutinas) DB.rutinas[d].forEach(e => e.done = false);
@@ -186,7 +187,6 @@ function reiniciarSemana() {
 }
 
 function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
-
 function guardarEjercicio() {
     const d = document.getElementById('r_dia').value, n = document.getElementById('r_nombre').value, s = document.getElementById('r_series').value, f = document.getElementById('r_file').files[0];
     if(!n) return;
@@ -209,10 +209,19 @@ function renderSuples() { document.getElementById('lista-suples').innerHTML = DB
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
 function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
+// IMPORTACIÓN REFORZADA
 function importarData(e) {
     const r = new FileReader();
     r.onload = (ev) => {
-        try { DB = JSON.parse(ev.target.result); save(); location.reload(); } catch(err) { alert("Error"); }
+        try {
+            const temp = JSON.parse(ev.target.result);
+            // Fusionar datos antiguos con estructura nueva
+            DB = Object.assign(DB, temp);
+            if(!DB.socio) DB.socio = "Socio Recuperado";
+            save(); 
+            alert("¡Importación exitosa!");
+            window.location.reload(); 
+        } catch(err) { alert("Error al leer el archivo. Asegúrate que sea un JSON válido."); }
     };
     r.readAsText(e.target.files[0]);
 }
