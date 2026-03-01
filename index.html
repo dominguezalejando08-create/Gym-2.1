@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONOS FIT | Ultra Compatible</title>
+    <title>MONOS FIT | Pro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -16,51 +16,52 @@
         .tema-niña { --primary: #9d4edd; --accent: #ff85a1; --bg: #fff5f8; --gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
         .tema-niño { --primary: #2563eb; --accent: #22c55e; --bg: #f1f5f9; --text: #0f172a; --text-light: #64748b; --gradient: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%); --border: rgba(0,0,0,0.1); }
 
-        body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 80px; transition: 0.3s; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 90px; transition: 0.3s; }
 
         #pantalla-inicio { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .btn-emoji { font-size: 4rem; border: none; cursor: pointer; background: white; border-radius: 50%; width: 120px; height: 120px; margin: 15px; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
 
-        header { padding: 40px 20px; text-align: center; background: var(--gradient); color: white; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
-        #frase-dinamica { margin-top: 10px; font-size: 0.85rem; font-weight: 300; min-height: 1.2em; opacity: 0.9; }
+        header { padding: 40px 20px; text-align: center; background: var(--gradient); color: white; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; box-shadow: var(--shadow); }
+        #frase-dinamica { margin-top: 10px; font-size: 0.85rem; font-weight: 300; min-height: 1.2em; }
 
-        nav { display: flex; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; justify-content: space-around; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        nav button { border: none; background: none; padding: 18px 10px; font-weight: 600; font-size: 0.8rem; color: var(--text-light); cursor: pointer; }
-        nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+        nav { display: flex; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); position: fixed; bottom: 0; width: 100%; z-index: 1000; justify-content: space-around; border-top: 1px solid rgba(0,0,0,0.05); }
+        nav button { border: none; background: none; padding: 15px 5px; font-weight: 600; font-size: 0.75rem; color: var(--text-light); cursor: pointer; flex: 1; }
+        nav button.active { color: var(--primary); border-top: 3px solid var(--primary); }
 
         section { display: none; max-width: 600px; margin: 20px auto; padding: 0 20px; animation: fadeIn 0.4s; }
         section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-        .ex-card { display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--card); border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .ex-card { display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--card); border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--border); position: relative; }
         .ex-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #eee; }
+        
+        .btn-del { position: absolute; top: 5px; right: 5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; }
 
         .btn { padding: 14px; border-radius: 18px; border: none; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; display: block; text-align: center; margin-top: 10px; }
         .btn-main { background: var(--primary); color: white; }
         .btn-accent { background: var(--accent); color: white; }
         
-        .progress-container { background: rgba(0,0,0,0.05); border-radius: 10px; height: 10px; margin-bottom: 20px; overflow: hidden; }
+        .progress-container { background: rgba(0,0,0,0.05); border-radius: 10px; height: 12px; margin-bottom: 20px; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: 0.5s; }
 
-        .dieta-item { margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px; }
-        .dieta-label { font-weight: 700; font-size: 0.8rem; color: var(--primary); text-transform: uppercase; display: block; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--border); margin-bottom: 15px; box-sizing: border-box; background: var(--card); color: var(--text); font-family: inherit; font-size: 1rem; }
     </style>
 </head>
 <body>
 
 <div id="pantalla-inicio">
     <h1 style="color:#4a1e4a">MONOS FIT</h1>
-    <p>¿Quién entrena hoy?</p>
+    <p>Elige tu estilo</p>
     <div style="display:flex;">
-        <button class="btn-emoji" style="border: 4px solid #ff85a1" onclick="elegirTema('niña')">🌸</button>
-        <button class="btn-emoji" style="border: 4px solid #2563eb" onclick="elegirTema('niño')">⚡</button>
+        <button class="btn-emoji" onclick="elegirTema('niña')">🌸</button>
+        <button class="btn-emoji" onclick="elegirTema('niño')">⚡</button>
     </div>
 </div>
 
 <header>
     <h1 id="titulo-header">MI RUTINA</h1>
-    <div id="status-dia">Cargando...</div>
+    <div id="status-dia">Día 1</div>
     <div id="frase-dinamica"></div>
 </header>
 
@@ -68,6 +69,7 @@
     <button class="active" data-section="entrenar">HOY</button>
     <button data-section="rutina">PLAN</button>
     <button data-section="dieta">DIETA</button>
+    <button data-section="progreso">EVO</button>
     <button data-section="ajustes">GEAR</button>
 </nav>
 
@@ -78,43 +80,73 @@
 
 <section id="rutina">
     <div class="card">
-        <h2>📝 Añadir Ejercicio</h2>
-        <select id="r_dia"><option value="1">Día 1</option><option value="2">Día 2</option></select>
-        <input id="r_nombre" placeholder="Nombre Ejercicio">
-        <input id="r_series" placeholder="Series/Reps">
+        <h2>🛠️ Administrar Rutinas</h2>
+        <select id="r_dia">
+            <option value="1">Día 1</option>
+            <option value="2">Día 2</option>
+            <option value="3">Día 3</option>
+        </select>
+        <input id="r_nombre" placeholder="Nombre del Ejercicio">
+        <input id="r_series" placeholder="Series y Repeticiones (ej. 4x12)">
+        <label style="font-size: 0.8rem;">Subir Foto:</label>
         <input type="file" id="r_file" accept="image/*">
-        <button class="btn btn-main" onclick="agregarEjercicio()">Guardar</button>
+        <button class="btn btn-main" onclick="agregarEjercicio()">Añadir Ejercicio</button>
     </div>
+    <div id="visor-plan"></div>
 </section>
 
 <section id="dieta">
-    <div id="contenido-dieta"></div>
+    <div class="card">
+        <h2>🍴 Editar Dieta</h2>
+        <select id="d_menu_sel" onchange="cargarFormDieta()">
+            <option value="menuA">Editar Menú A</option>
+            <option value="menuB">Editar Menú B</option>
+        </select>
+        <textarea id="d_des" placeholder="Desayuno..." rows="2"></textarea>
+        <textarea id="d_s1" placeholder="Snack 1..." rows="2"></textarea>
+        <textarea id="d_com" placeholder="Comida..." rows="2"></textarea>
+        <textarea id="d_s2" placeholder="Snack 2..." rows="2"></textarea>
+        <textarea id="d_cen" placeholder="Cena..." rows="2"></textarea>
+        <button class="btn btn-main" onclick="guardarDieta()">Guardar Cambios</button>
+    </div>
+    <div id="dieta-vista"></div>
+</section>
+
+<section id="progreso">
+    <div class="card">
+        <h2>📉 Evolución</h2>
+        <input type="number" id="peso_input" placeholder="Peso actual (kg)">
+        <button class="btn btn-main" onclick="registrarPeso()">Registrar Peso</button>
+    </div>
+    <div id="lista-pesos"></div>
 </section>
 
 <section id="ajustes">
     <div class="card">
-        <h2>⚙️ Gestión de Datos</h2>
-        <button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button>
+        <h2>⚙️ Gear</h2>
+        <button class="btn btn-main" onclick="exportarData()">📤 Exportar Todo</button>
         <button class="btn btn-accent" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
         <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
-        <hr style="margin:20px 0; opacity:0.1">
-        <button class="btn" style="background:#ef4444; color:white" onclick="resetData()">🗑️ Borrar Todo</button>
+        <button class="btn" style="background:#666; color:white" onclick="reiniciarDiaManual()">🔄 Reiniciar a Día 1</button>
+        <button class="btn" style="background:#ef4444; color:white" onclick="resetData()">🗑️ Borrar Datos</button>
     </div>
 </section>
 
 <script>
-let DB = { tema: null, diaActual: 1, rutinas: { "1": [], "2": [] }, dieta: { menuA: {}, menuB: {} } };
+let DB = { 
+    tema: null, 
+    diaActual: 1, 
+    rutinas: { "1": [], "2": [], "3": [] }, 
+    dieta: { menuA: {}, menuB: {} },
+    pesos: []
+};
 
-const frases = ["¡Dale con todo!", "Disciplina es libertad", "No te rindas", "Un día a la vez", "Eres fuerte"];
+const frases = ["¡No te detengas!", "Cada repetición cuenta", "Enfócate en tu progreso", "Hoy serás mejor que ayer"];
 
-function cambiarFrase() {
-    document.getElementById('frase-dinamica').innerText = frases[Math.floor(Math.random()*frases.length)];
-}
-
-function save() { localStorage.setItem('MONOS_FIT_V7', JSON.stringify(DB)); }
+function save() { localStorage.setItem('MONOS_FIT_V_FINAL', JSON.stringify(DB)); }
 
 function load() {
-    const data = localStorage.getItem('MONOS_FIT_V7');
+    const data = localStorage.getItem('MONOS_FIT_V_FINAL');
     if(data) {
         DB = JSON.parse(data);
         if(DB.tema) aplicarTema(DB.tema);
@@ -130,8 +162,11 @@ function aplicarTema(t) {
     document.getElementById('titulo-header').innerText = t === 'niña' ? 'MONOS FIT 🌸' : 'MONOS FIT ⚡';
     renderEntrenamiento();
     renderDieta();
+    renderPlan();
+    renderPesos();
 }
 
+// --- LOGICA HOY ---
 function renderEntrenamiento() {
     const cont = document.getElementById('listaEntrenamiento');
     const bar = document.getElementById('bar');
@@ -149,7 +184,7 @@ function renderEntrenamiento() {
             <img src="${ej.img || ''}" class="ex-img" onerror="this.src='https://via.placeholder.com/75?text=🏋️'">
             <div style="flex:1">
                 <div style="font-weight:600">${ej.nombre}</div>
-                <div style="font-size:0.8rem; color:var(--text-light)">${ej.series}</div>
+                <div style="font-size:0.8rem;">${ej.series}</div>
             </div>
             <input type="checkbox" style="width:28px; height:28px;" ${ej.done?'checked':''} onchange="completarEj(${idx})">
         `;
@@ -160,8 +195,16 @@ function renderEntrenamiento() {
     bar.style.width = porcentaje + "%";
     status.innerText = `Día ${dia} - ${Math.round(porcentaje)}%`;
 
-    if(porcentaje === 100 && ejercicios.length > 0 && DB.diaActual === 1) {
-        setTimeout(() => { alert("¡Día 1 terminado! Pasando al Día 2"); DB.diaActual = 2; save(); renderEntrenamiento(); }, 600);
+    if(porcentaje === 100 && ejercicios.length > 0) {
+        setTimeout(() => {
+            if(DB.diaActual < 3) {
+                alert(`¡Día ${DB.diaActual} superado! Pasando al siguiente.`);
+                DB.diaActual++;
+                save(); renderEntrenamiento();
+            } else {
+                alert("¡Ciclo de 3 días completado! 🎉");
+            }
+        }, 600);
     }
 }
 
@@ -170,79 +213,151 @@ function completarEj(idx) {
     save(); renderEntrenamiento();
 }
 
-function renderDieta() {
-    const cont = document.getElementById('contenido-dieta');
-    if(!DB.dieta) return;
-    
-    const crearHTMLMenu = (titulo, menu) => `
-        <div class="card">
-            <h3 style="color:var(--primary)">${titulo}</h3>
-            ${menu.desayuno ? `<div class="dieta-item"><span class="dieta-label">Desayuno</span>${menu.desayuno}</div>` : ''}
-            ${menu.snack1 ? `<div class="dieta-item"><span class="dieta-label">Snack 1</span>${menu.snack1}</div>` : ''}
-            ${menu.comida ? `<div class="dieta-item"><span class="dieta-label">Comida</span>${menu.comida}</div>` : ''}
-            ${menu.snack2 ? `<div class="dieta-item"><span class="dieta-label">Snack 2</span>${menu.snack2}</div>` : ''}
-            ${menu.cena ? `<div class="dieta-item"><span class="dieta-label">Cena</span>${menu.cena}</div>` : ''}
-        </div>
-    `;
-
-    cont.innerHTML = crearHTMLMenu("🍎 Menú A", DB.dieta.menuA || {}) + crearHTMLMenu("🍏 Menú B", DB.dieta.menuB || {});
-}
-
+// --- PLAN ---
 function agregarEjercicio() {
     const dia = document.getElementById('r_dia').value;
     const nombre = document.getElementById('r_nombre').value;
     const series = document.getElementById('r_series').value;
     const file = document.getElementById('r_file').files[0];
-    if(!nombre) return alert("Falta nombre");
-    const reader = new FileReader();
-    reader.onload = (e) => {
+    if(!nombre) return alert("Nombre obligatorio");
+    
+    const fReader = new FileReader();
+    fReader.onload = (e) => {
         DB.rutinas[dia].push({ nombre, series, img: e.target.result || '', done: false });
-        save(); alert("¡Guardado!");
+        save(); renderPlan(); renderEntrenamiento();
         document.getElementById('r_nombre').value = '';
+        alert("¡Añadido!");
     };
-    if(file) reader.readAsDataURL(file); else reader.onload({});
+    if(file) fReader.readAsDataURL(file); else fReader.onload({});
 }
 
+function renderPlan() {
+    const cont = document.getElementById('visor-plan');
+    cont.innerHTML = "<h3>Tu Rutina Actual</h3>";
+    for(let d in DB.rutinas) {
+        if(DB.rutinas[d].length > 0) {
+            const diaDiv = document.createElement('div');
+            diaDiv.innerHTML = `<h4>Día ${d}</h4>`;
+            DB.rutinas[d].forEach((ej, idx) => {
+                const item = document.createElement('div');
+                item.className = 'ex-card';
+                item.innerHTML = `
+                    <img src="${ej.img}" class="ex-img" onerror="this.style.display='none'">
+                    <div style="flex:1"><b>${ej.nombre}</b><br><small>${ej.series}</small></div>
+                    <button class="btn-del" onclick="eliminarEj(${d}, ${idx})">×</button>
+                `;
+                diaDiv.appendChild(item);
+            });
+            cont.appendChild(diaDiv);
+        }
+    }
+}
+
+function eliminarEj(dia, idx) {
+    DB.rutinas[dia].splice(idx, 1);
+    save(); renderPlan(); renderEntrenamiento();
+}
+
+// --- DIETA ---
+function cargarFormDieta() {
+    const menu = document.getElementById('d_menu_sel').value;
+    const d = DB.dieta[menu] || {};
+    document.getElementById('d_des').value = d.desayuno || "";
+    document.getElementById('d_s1').value = d.snack1 || "";
+    document.getElementById('d_com').value = d.comida || "";
+    document.getElementById('d_s2').value = d.snack2 || "";
+    document.getElementById('d_cen').value = d.cena || "";
+}
+
+function guardarDieta() {
+    const menu = document.getElementById('d_menu_sel').value;
+    DB.dieta[menu] = {
+        desayuno: document.getElementById('d_des').value,
+        snack1: document.getElementById('d_s1').value,
+        comida: document.getElementById('d_com').value,
+        snack2: document.getElementById('d_s2').value,
+        cena: document.getElementById('d_cen').value
+    };
+    save(); renderDieta();
+    alert("Dieta actualizada");
+}
+
+function renderDieta() {
+    const v = document.getElementById('dieta-vista');
+    v.innerHTML = "";
+    ["menuA", "menuB"].forEach(m => {
+        const d = DB.dieta[m];
+        if(d.desayuno || d.comida) {
+            v.innerHTML += `
+                <div class="card">
+                    <h3 style="color:var(--primary)">${m === 'menuA' ? '🍎 Menú A' : '🍏 Menú B'}</h3>
+                    <p><small><b>DES:</b> ${d.desayuno || '-'}</small></p>
+                    <p><small><b>S1:</b> ${d.snack1 || '-'}</small></p>
+                    <p><small><b>COM:</b> ${d.comida || '-'}</small></p>
+                    <p><small><b>S2:</b> ${d.snack2 || '-'}</small></p>
+                    <p><small><b>CEN:</b> ${d.cena || '-'}</small></p>
+                </div>`;
+        }
+    });
+}
+
+// --- EVO ---
+function registrarPeso() {
+    const p = document.getElementById('peso_input').value;
+    if(!p) return;
+    DB.pesos.unshift({ fecha: new Date().toLocaleDateString(), valor: p });
+    save(); renderPesos();
+    document.getElementById('peso_input').value = "";
+}
+
+function renderPesos() {
+    const cont = document.getElementById('lista-pesos');
+    cont.innerHTML = DB.pesos.map(p => `
+        <div class="card" style="display:flex; justify-content:space-between; padding:10px 20px;">
+            <span>${p.fecha}</span> <b>${p.valor} kg</b>
+        </div>
+    `).join('');
+}
+
+// --- GEAR ---
 function exportarData() {
-    const fotos = confirm("¿Incluir fotos?");
-    let copia = JSON.parse(JSON.stringify(DB));
-    if(!fotos) for(let d in copia.rutinas) copia.rutinas[d].forEach(e => e.img = "");
-    const blob = new Blob([JSON.stringify(copia)], {type:'application/json'});
+    const blob = new Blob([JSON.stringify(DB)], {type:'application/json'});
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = 'monos_fit_backup.json'; a.click();
+    a.download = 'monos_fit_full.json'; a.click();
 }
 
 function importarData(e) {
     const reader = new FileReader();
     reader.onload = (ev) => {
         try {
-            const dataIn = JSON.parse(ev.target.result);
-            // Aseguramos que la estructura sea la correcta para el render
-            DB.rutinas = dataIn.rutinas || { "1": [], "2": [] };
-            DB.dieta = dataIn.dieta || { menuA: {}, menuB: {} };
-            DB.diaActual = 1; // Reiniciamos al día 1 al importar
-            save();
-            alert("✅ Importado con éxito. Por favor elige tu perfil.");
-            location.reload();
-        } catch(err) { alert("Error al leer archivo"); }
+            const d = JSON.parse(ev.target.result);
+            DB.rutinas = d.rutinas || { "1": [], "2": [], "3": [] };
+            DB.dieta = d.dieta || { menuA: {}, menuB: {} };
+            DB.pesos = d.pesos || [];
+            DB.diaActual = 1;
+            save(); location.reload();
+        } catch(err) { alert("Archivo incompatible"); }
     };
     reader.readAsText(e.target.files[0]);
 }
 
+function reiniciarDiaManual() { DB.diaActual = 1; save(); renderEntrenamiento(); alert("Regresamos al Día 1"); }
+function resetData() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+
+// NAV
 document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.section).classList.add('active');
-        cambiarFrase();
+        document.getElementById('frase-dinamica').innerText = frases[Math.floor(Math.random()*frases.length)];
         if(btn.dataset.section === 'entrenar') renderEntrenamiento();
     });
 });
 
-function resetData() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
-
 load();
+cargarFormDieta();
 </script>
 </body>
 </html>
