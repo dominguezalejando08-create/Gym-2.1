@@ -3,222 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONOS FIT | LifeStyle</title>
+    <title>MONOS FIT | Pink & Magic</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
         :root {
-            --primary: #4f46e5;
-            --bg: #f8fafc;
+            --primary: #9d4edd; 
+            --primary-light: #e0aaff;
+            --accent: #ff85a1; 
+            --bg: #fff5f8; 
             --card: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --accent: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            --radius: 20px;
+            --text: #4a1e4a; 
+            --text-light: #8e7d8e;
+            --shadow: 0 10px 30px rgba(157, 78, 221, 0.1);
+            --radius: 24px;
         }
 
         body {
             margin: 0;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 50px;
+            padding-bottom: 80px;
         }
 
         /* --- Header --- */
         header {
-            background: white;
-            padding: 40px 20px;
+            padding: 50px 20px;
             text-align: center;
-            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: white;
+            border-bottom-left-radius: 40px; border-bottom-right-radius: 40px;
+            box-shadow: var(--shadow);
         }
-        header h1 { margin: 0; font-size: 2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-        #frase-container { margin-top: 10px; color: var(--text-light); font-size: 0.95rem; font-weight: 500; transition: opacity 0.5s; }
+        header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
+        #frase-container { margin-top: 10px; font-weight: 300; font-size: 0.9rem; }
 
-        /* --- Nav --- */
+        /* --- Nav Glassmorphism --- */
         nav {
             display: flex;
-            background: white;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            overflow-x: auto;
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            justify-content: space-around;
         }
         nav button {
-            flex: 1; min-width: 90px; border: none; background: none; padding: 18px 10px;
-            font-weight: 600; font-size: 0.85rem; color: var(--text-light); cursor: pointer; transition: 0.3s;
+            border: none; background: none; padding: 18px 10px;
+            font-weight: 600; font-size: 0.8rem; color: var(--text-light); cursor: pointer;
         }
         nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
         /* --- Layout --- */
-        section { display: none; max-width: 700px; margin: 25px auto; padding: 0 20px; animation: fadeInUp 0.5s ease; }
+        section { display: none; max-width: 600px; margin: 30px auto; padding: 0 20px; animation: fadeIn 0.5s ease; }
         section.active { display: block; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
             background: var(--card);
             border-radius: var(--radius);
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 25px; margin-bottom: 25px;
             box-shadow: var(--shadow);
-            border: 1px solid #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        /* --- Ejercicios (No se contraen) --- */
-        .ex-list { display: flex; flex-direction: column; gap: 15px; }
+        /* --- Entrenamiento (Sin contracción) --- */
         .ex-card {
             display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: #f8fafc; border-radius: 15px; border: 1px solid #e2e8f0;
+            background: #fff; border-radius: 18px; margin-bottom: 12px;
+            border: 1px solid #f0e6f0;
         }
-        .ex-img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; background: #fff; border: 1px solid #eee; }
+        .ex-img { width: 65px; height: 65px; border-radius: 15px; object-fit: cover; background: #fafafa; }
         
         /* --- Inputs & Buttons --- */
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; }
         input, select {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #cbd5e1;
-            font-family: inherit; font-size: 1rem; transition: 0.3s;
+            width: 100%; padding: 12px 15px; border-radius: 15px; border: 2px solid #f0e6f0;
+            margin-bottom: 15px; box-sizing: border-box; font-family: inherit;
         }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
 
         .btn {
-            padding: 12px 20px; border-radius: 12px; border: none; font-weight: 700;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s;
+            padding: 14px; border-radius: 18px; border: none; font-weight: 600;
+            cursor: pointer; transition: 0.3s; font-family: inherit;
         }
-        .btn-main { background: var(--primary); color: white; width: 100%; justify-content: center; }
-        .btn-ghost { background: #f1f5f9; color: var(--text); }
-        .btn:active { transform: scale(0.96); }
+        .btn-main { background: linear-gradient(135deg, var(--primary), #7b2cbf); color: white; width: 100%; }
+        .btn-pink { background: var(--accent); color: white; width: 100%; }
 
-        /* --- Macros --- */
-        .macro-box { text-align: center; padding: 15px; border-radius: 15px; color: white; }
-
-        /* --- Table --- */
-        .table-wrap { overflow-x: auto; border-radius: 15px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th { background: #f8fafc; padding: 15px; text-align: left; font-size: 0.8rem; }
-        td { padding: 15px; border-top: 1px solid #f1f5f9; font-size: 0.9rem; }
-
-        #timer-pill {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--text); color: white; padding: 12px 30px;
-            border-radius: 50px; font-weight: 800; display: none; z-index: 2000; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        #timer-box {
+            position: fixed; bottom: 25px; right: 25px; background: white;
+            border: 2px solid var(--primary-light); padding: 15px 25px;
+            border-radius: 50px; font-weight: 700; color: var(--primary);
+            box-shadow: var(--shadow); display: none; z-index: 2000;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>MONOS FIT</h1>
-    <div id="frase-container">Prepárate para el éxito</div>
+    <h1>MONOS FIT 🌸</h1>
+    <div id="frase-container">Cargando inspiración...</div>
 </header>
 
 <nav>
-    <button class="active" data-section="entrenar">Entrenar</button>
-    <button data-section="rutina">Rutina</button>
-    <button data-section="dieta">Dieta</button>
-    <button data-section="progreso">Evolución</button>
-    <button data-section="ajustes">Ajustes</button>
+    <button class="active" data-section="entrenar">HOY</button>
+    <button data-section="rutina">PLAN</button>
+    <button data-section="dieta">DIETA</button>
+    <button data-section="progreso">EVO</button>
+    <button data-section="ajustes">GEAR</button>
 </nav>
 
 <section id="entrenar" class="active">
-    <h2>🚀 Entrenamiento de Hoy</h2>
-    <label>Selecciona tu día: 
-        <select id="selectDiaHoy" onchange="renderEntrenamiento()">
-            <option value="1">Día 1</option><option value="2">Día 2</option>
-            <option value="3">Día 3</option><option value="4">Día 4</option>
-            <option value="5">Día 5</option><option value="6">Día 6</option>
-        </select>
-    </label>
-    <div id="listaEntrenamiento" class="ex-list" style="margin-top:20px"></div>
+    <h2>✨ Rutina de Hoy</h2>
+    <select id="selectDiaHoy" onchange="renderEntrenamiento()">
+        <option value="1">Lunes - Día 1</option><option value="2">Martes - Día 2</option>
+        <option value="3">Miércoles - Día 3</option><option value="4">Jueves - Día 4</option>
+        <option value="5">Viernes - Día 5</option><option value="6">Sábado - Día 6</option>
+    </select>
+    <div id="listaEntrenamiento" style="margin-top:15px"></div>
 </section>
 
 <section id="rutina">
     <div class="card">
-        <h3>✏️ Crear Ejercicio</h3>
-        <div class="input-group">
-            <label>Día</label>
-            <select id="r_dia"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
-        </div>
-        <div class="input-group">
-            <label>Nombre</label>
-            <input id="r_nombre" placeholder="Ej: Dominadas">
-        </div>
-        <div class="input-group">
-            <label>Series / Reps</label>
-            <input id="r_series" placeholder="Ej: 3x Max">
-        </div>
-        <div class="input-group">
-            <label>Imagen</label>
-            <input type="file" id="r_file" accept="image/*">
-        </div>
-        <button class="btn btn-main" onclick="agregarEjercicio()">Añadir a la lista</button>
+        <h2>📝 Añadir Ejercicio</h2>
+        <select id="r_dia"><option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option><option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option></select>
+        <input id="r_nombre" placeholder="Nombre (ej. Sentadillas)">
+        <input id="r_series" placeholder="Series/Reps (ej. 4x10)">
+        <input type="file" id="r_file" accept="image/*">
+        <button class="btn btn-main" onclick="agregarEjercicio()">Guardar Ejercicio</button>
     </div>
 </section>
 
 <section id="dieta">
-    <div class="card" id="macros-calc">
-        <h3>🔥 Calculadora de Macros</h3>
-        <input type="number" id="m_peso" placeholder="Tu peso actual (kg)" style="margin-bottom:10px">
-        <select id="m_objetivo">
-            <option value="mantener">Mantener Peso</option>
-            <option value="volumen">Subir Volumen (Bulk)</option>
-            <option value="definir">Definición (Cut)</option>
-        </select>
-        <button class="btn btn-main" style="margin-top:10px" onclick="calcularMacros()">Calcular Mis Macros</button>
-        <div id="macro-res" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:15px"></div>
-    </div>
-
-    <div id="menuHoyBox"></div>
-
     <div class="card">
-        <h3>🥗 Editar Menús</h3>
-        <div style="display:flex; gap:10px; margin-bottom:15px">
-            <button class="btn btn-ghost" style="flex:1" onclick="tabDieta('A')">Menú A</button>
-            <button class="btn btn-ghost" style="flex:1" onclick="tabDieta('B')">Menú B</button>
+        <h2>⚖️ Macros</h2>
+        <input type="number" id="m_peso" placeholder="Peso actual (kg)">
+        <button class="btn btn-main" onclick="calcularMacros()">Calcular</button>
+        <div id="macro-res" style="display:flex; gap:10px; margin-top:15px"></div>
+    </div>
+    <div id="menuHoyBox"></div>
+    <div class="card">
+        <h2>🍳 Menús Base</h2>
+        <div style="display:flex; gap:5px; margin-bottom:10px">
+            <button class="btn" style="flex:1" onclick="tabDieta('A')">Menú A</button>
+            <button class="btn" style="flex:1" onclick="tabDieta('B')">Menú B</button>
         </div>
-        <div id="dieta-form">
-            <h4 id="dieta-title">Editando Menú A</h4>
-            <input id="in_des" placeholder="Desayuno" style="margin-bottom:8px">
-            <input id="in_co" placeholder="Comida" style="margin-bottom:8px">
-            <input id="in_ce" placeholder="Cena" style="margin-bottom:8px">
-            <button class="btn btn-main" onclick="guardarDieta()">Guardar Menú</button>
-        </div>
+        <input id="in_des" placeholder="Desayuno">
+        <input id="in_co" placeholder="Almuerzo">
+        <input id="in_ce" placeholder="Cena">
+        <button class="btn btn-pink" onclick="guardarDieta()">Guardar Menú</button>
     </div>
 </section>
 
 <section id="progreso">
     <div class="card">
-        <h3>📏 Registrar Medidas</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-            <input type="number" id="ev_peso" placeholder="Peso (kg)">
-            <input type="number" id="ev_cintura" placeholder="Cintura (cm)">
-        </div>
-        <button class="btn btn-main" style="margin-top:10px" onclick="guardarProgreso()">Registrar Hoy</button>
+        <h2>📉 Registro</h2>
+        <input type="number" id="ev_peso" placeholder="Peso (kg)">
+        <input type="number" id="ev_cintura" placeholder="Cintura (cm)">
+        <button class="btn btn-main" onclick="guardarProgreso()">Registrar</button>
     </div>
-    <div class="card table-wrap">
-        <table id="tabla-progreso">
-            <thead><tr><th>Fecha</th><th>Peso</th><th>Cintura</th><th>Acción</th></tr></thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    <div id="historial-lista"></div>
 </section>
 
 <section id="ajustes">
     <div class="card">
-        <h3>💾 Mis Datos</h3>
-        <button class="btn btn-ghost" style="width:100%; margin-bottom:10px" onclick="exportarData()">📤 Exportar Backup</button>
-        <button class="btn btn-ghost" style="width:100%; margin-bottom:10px" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
+        <h2>⚙️ Gestión de Datos</h2>
+        <p style="font-size:0.8rem; color:var(--text-light)">Como los navegadores protegen tus archivos, debes seleccionar el archivo manualmente, pero se cargará al instante.</p>
+        <button class="btn btn-main" style="margin-bottom:10px" onclick="exportarData()">📤 Exportar Backup</button>
+        <button class="btn btn-pink" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
         <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
-        <button class="btn btn-main" style="background:var(--danger)" onclick="resetData()">⚠️ Borrar Todo</button>
+        <hr style="margin:20px 0; border:0; border-top:1px solid #f0e6f0">
+        <button class="btn" style="width:100%; background:#ffccd5; color:#c9184a" onclick="resetData()">Eliminar todo</button>
     </div>
-</header>
+</section>
 
-<div id="timer-pill">Descanso: <span id="time">60</span>s</div>
+<div id="timer-box">⏱️ <span id="time">60</span>s</div>
 
 <script>
 let DB = {
@@ -227,23 +184,16 @@ let DB = {
     progreso: []
 };
 
-function save() { localStorage.setItem('MONOS_FIT_LIGHT', JSON.stringify(DB)); }
+// --- CORE ---
+function save() { localStorage.setItem('MONOS_FIT_PINK_V3', JSON.stringify(DB)); }
 function load() {
-    const data = localStorage.getItem('MONOS_FIT_LIGHT');
+    const data = localStorage.getItem('MONOS_FIT_PINK_V3');
     if(data) DB = JSON.parse(data);
     else { for(let i=1; i<=28; i++) DB.dieta.plan[i] = (i%2===0)?'B':'A'; save(); }
 }
 
-// --- FRASES ---
-const frases = ["¡Vamos con todo hoy!", "Tu cuerpo es tu templo.", "La disciplina vence al talento.", "Crea la mejor versión de ti.", "Entrenar es amarse a uno mismo."];
-function nuevaFrase() {
-    const el = document.getElementById('frase-container');
-    el.style.opacity = 0;
-    setTimeout(() => {
-        el.innerText = frases[Math.floor(Math.random()*frases.length)];
-        el.style.opacity = 1;
-    }, 500);
-}
+const frases = ["¡Tu esfuerzo hoy dará frutos mañana!", "La disciplina es amor propio.", "Sé tu propia motivación.", "El rosa es poder.", "Entrenar cambia el humor."];
+function mostrarFrase() { document.getElementById('frase-container').innerText = frases[Math.floor(Math.random()*frases.length)]; }
 
 // --- NAVEGACIÓN ---
 document.querySelectorAll('nav button').forEach(btn => {
@@ -258,31 +208,14 @@ document.querySelectorAll('nav button').forEach(btn => {
     });
 });
 
-// --- RUTINA ---
-function agregarEjercicio() {
-    const dia = document.getElementById('r_dia').value;
-    const nombre = document.getElementById('r_nombre').value;
-    const series = document.getElementById('r_series').value;
-    const file = document.getElementById('r_file').files[0];
-
-    if(!nombre) return alert("Nombre obligatorio");
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        DB.rutinas[dia].push({ nombre, series, img: e.target.result || '', done: false });
-        save(); alert("¡Añadido!");
-        document.getElementById('r_nombre').value = '';
-    };
-    if(file) reader.readAsDataURL(file); else reader.onload({});
-}
-
+// --- ENTRENAMIENTO (FUNCIONALIDAD MEJORADA) ---
 function renderEntrenamiento() {
     const dia = document.getElementById('selectDiaHoy').value;
     const cont = document.getElementById('listaEntrenamiento');
     cont.innerHTML = '';
     
-    if(!DB.rutinas[dia] || DB.rutinas[dia].length === 0) {
-        cont.innerHTML = "<p style='text-align:center; color:#94a3b8'>No hay ejercicios para este día.</p>";
+    if (DB.rutinas[dia].length === 0) {
+        cont.innerHTML = '<p style="text-align:center; color:var(--text-light)">Aún no tienes ejercicios en el PLAN.</p>';
         return;
     }
 
@@ -292,11 +225,10 @@ function renderEntrenamiento() {
         div.innerHTML = `
             <img src="${ej.img}" class="ex-img" onerror="this.style.display='none'">
             <div style="flex:1">
-                <div style="font-weight:700">${ej.nombre}</div>
-                <div style="font-size:0.8rem; color:var(--text-light)">${ej.series}</div>
+                <div style="font-weight:600">${ej.nombre}</div>
+                <div style="font-size:0.75rem; color:var(--text-light)">${ej.series}</div>
             </div>
-            <input type="checkbox" style="width:25px; height:25px" ${ej.done?'checked':''} onchange="toggleEj(${dia}, ${idx})">
-            <button onclick="eliminarEj(${dia}, ${idx})" style="border:none; background:none; cursor:pointer">🗑️</button>
+            <input type="checkbox" style="width:25px; height:25px; accent-color:var(--primary)" ${ej.done?'checked':''} onchange="toggleEj(${dia}, ${idx})">
         `;
         cont.appendChild(div);
     });
@@ -306,78 +238,55 @@ function toggleEj(dia, idx) {
     DB.rutinas[dia][idx].done = !DB.rutinas[dia][idx].done;
     if(DB.rutinas[dia][idx].done) startTimer();
     save();
-    // No hacemos renderEntrenamiento() aquí para que no se "muevan" las cosas mientras entrenas
+    // NOTA: No llamamos a renderEntrenamiento() aquí para evitar que la lista "salte" o se contraiga.
 }
 
-function eliminarEj(dia, idx) {
-    if(confirm("¿Borrar?")) { DB.rutinas[dia].splice(idx,1); save(); renderEntrenamiento(); }
-}
-
-// --- TIMER ---
 function startTimer() {
-    const pill = document.getElementById('timer-pill');
+    const box = document.getElementById('timer-box');
     const time = document.getElementById('time');
-    let s = 60;
-    pill.style.display = 'block';
+    let s = 60; box.style.display = 'block';
     const inv = setInterval(() => {
         s--; time.innerText = s;
-        if(s <= 0) { clearInterval(inv); pill.style.display = 'none'; }
+        if(s <= 0) { clearInterval(inv); box.style.display = 'none'; }
     }, 1000);
 }
 
-// --- DIETA & MACROS ---
-let dietTab = 'A';
-function tabDieta(t) {
-    dietTab = t; document.getElementById('dieta-title').innerText = `Editando Menú ${t}`;
-    const m = DB.dieta[`menu${t}`];
-    document.getElementById('in_des').value = m.des || '';
-    document.getElementById('in_co').value = m.co || '';
-    document.getElementById('in_ce').value = m.ce || '';
-}
-
-function guardarDieta() {
-    DB.dieta[`menu${dietTab}`] = {
-        des: document.getElementById('in_des').value,
-        co: document.getElementById('in_co').value,
-        ce: document.getElementById('in_ce').value
+// --- RESTO DE FUNCIONES ---
+function agregarEjercicio() {
+    const dia = document.getElementById('r_dia').value;
+    const nombre = document.getElementById('r_nombre').value;
+    const series = document.getElementById('r_series').value;
+    const file = document.getElementById('r_file').files[0];
+    if(!nombre) return alert("¡Falta el nombre!");
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        DB.rutinas[dia].push({ nombre, series, img: e.target.result || '', done: false });
+        save(); alert("¡Guardado!");
+        document.getElementById('r_nombre').value = '';
     };
-    save(); renderDieta(); alert("Guardado");
+    if(file) reader.readAsDataURL(file); else reader.onload({});
 }
 
 function calcularMacros() {
     const peso = document.getElementById('m_peso').value;
-    const obj = document.getElementById('m_objetivo').value;
     if(!peso) return;
-    
-    let cals = peso * 30;
-    if(obj === 'volumen') cals += 400;
-    if(obj === 'definir') cals -= 400;
-
-    const prot = peso * 2;
-    const fats = peso * 0.8;
-    const carbs = (cals - (prot*4) - (fats*9)) / 4;
-
+    const p = peso * 2; const f = peso * 0.8;
     document.getElementById('macro-res').innerHTML = `
-        <div class="macro-box" style="background:var(--primary)"><b>${Math.round(prot)}g</b><br>Proteína</div>
-        <div class="macro-box" style="background:var(--accent)"><b>${Math.round(carbs)}g</b><br>Carbos</div>
-        <div class="macro-box" style="background:var(--warning)"><b>${Math.round(fats)}g</b><br>Grasas</div>
+        <div style="flex:1; background:var(--primary); color:white; padding:10px; border-radius:10px; text-align:center"><b>${Math.round(p)}g</b><br>Prot</div>
+        <div style="flex:1; background:var(--accent); color:white; padding:10px; border-radius:10px; text-align:center"><b>${Math.round(f)}g</b><br>Grasa</div>
     `;
 }
 
 function renderDieta() {
     const hoy = ((new Date().getDate()-1)%28)+1;
     const m = DB.dieta[`menu${DB.dieta.plan[hoy]}`];
-    document.getElementById('menuHoyBox').innerHTML = `
-        <div class="card" style="border-left: 5px solid var(--accent)">
-            <h3 style="margin:0">🍽️ Menú de Hoy (Día ${hoy} - ${DB.dieta.plan[hoy]})</h3>
-            <p style="font-size:0.9rem; color:var(--text-light)">
-                🍳 ${m.des || '---'} | 🥗 ${m.co || '---'} | 🌙 ${m.ce || '---'}
-            </p>
-        </div>
-    `;
+    document.getElementById('menuHoyBox').innerHTML = `<div class="card"><h2>🌸 Hoy (Día ${hoy})</h2><p>${m.des || 'Sin desayuno'}<br>${m.co || 'Sin comida'}<br>${m.ce || 'Sin cena'}</p></div>`;
 }
 
-// --- PROGRESO ---
+let dTab = 'A';
+function tabDieta(t) { dTab = t; const m = DB.dieta[`menu${t}`]; document.getElementById('in_des').value = m.des||''; document.getElementById('in_co').value = m.co||''; document.getElementById('in_ce').value = m.ce||''; }
+function guardarDieta() { DB.dieta[`menu${dTab}`] = { des: document.getElementById('in_des').value, co: document.getElementById('in_co').value, ce: document.getElementById('in_ce').value }; save(); renderDieta(); alert("Menú guardado"); }
+
 function guardarProgreso() {
     const peso = document.getElementById('ev_peso').value;
     const cint = document.getElementById('ev_cintura').value;
@@ -387,35 +296,39 @@ function guardarProgreso() {
 }
 
 function renderProgreso() {
-    const body = document.querySelector('#tabla-progreso tbody');
-    body.innerHTML = '';
+    const cont = document.getElementById('historial-lista');
+    cont.innerHTML = '';
     DB.progreso.forEach((p, i) => {
-        body.innerHTML += `<tr><td>${p.fecha}</td><td>${p.peso}kg</td><td>${p.cint}cm</td><td><button onclick="borrarP(${i})">❌</button></td></tr>`;
+        cont.innerHTML += `<div class="card" style="display:flex; justify-content:space-between"><div><b>${p.fecha}</b>: ${p.peso}kg</div><button onclick="borrarP(${i})">🗑️</button></div>`;
     });
 }
 function borrarP(i) { DB.progreso.splice(i,1); save(); renderProgreso(); }
 
-// --- BACKUP ---
 function exportarData() {
     const blob = new Blob([JSON.stringify(DB)], {type: 'application/json'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'monos_fit_lite.json'; a.click();
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'backup_fit.json'; a.click();
 }
 
 function importarData(e) {
+    const file = e.target.files[0];
+    if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => { DB = JSON.parse(ev.target.result); save(); location.reload(); };
-    reader.readAsText(e.target.files[0]);
+    reader.onload = (ev) => {
+        try {
+            DB = JSON.parse(ev.target.result);
+            save();
+            alert("✨ ¡Datos recuperados con éxito!");
+            location.reload();
+        } catch(err) { alert("Archivo no válido"); }
+    };
+    reader.readAsText(file);
 }
 
 function resetData() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
 
 // INIT
-load();
-nuevaFrase();
-renderEntrenamiento();
-setInterval(nuevaFrase, 10000);
+load(); mostrarFrase(); renderEntrenamiento();
 </script>
-
 </body>
 </html>
-
