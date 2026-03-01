@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MONOS FIT</title>
+    <title>MONOS FIT | Pro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         :root {
@@ -79,7 +79,7 @@
     <button data-section="dieta"><span>🍎</span>DIETA</button>
     <button data-section="suples"><span>💊</span>SUPLES</button>
     <button data-section="progreso"><span>📉</span>EVO</button>
-    <button data-section="ajustes"><span>⚙️</span>AJUSTES</button>
+    <button data-section="ajustes"><span>⚙️</span>GEAR</button>
 </nav>
 
 <section id="entrenar" class="active">
@@ -90,9 +90,12 @@
 <section id="rutina">
     <div class="card">
         <h3>➕ Nuevo Ejercicio</h3>
-        <select id="r_dia"><option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option><option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option><option value="7">Día 7</option></select>
-        <input id="r_nombre" placeholder="Nombre">
-        <input id="r_series" placeholder="Series y Reps">
+        <select id="r_dia">
+            <option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option>
+            <option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option><option value="7">Día 7</option>
+        </select>
+        <input type="text" id="r_nombre" placeholder="Nombre del ejercicio">
+        <input type="text" id="r_series" placeholder="Series y Repeticiones (ej: 4x12)">
         <input type="file" id="r_file" accept="image/*">
         <button class="btn btn-main" onclick="guardarEjercicio()">Guardar Ejercicio</button>
         <button class="btn btn-danger" onclick="eliminarTodasRutinas()">🗑️ Limpiar Plan Completo</button>
@@ -183,27 +186,21 @@ function renderEntrenamiento() {
     const bar = document.getElementById('bar');
     if(bar) bar.style.width = p + "%";
 
-    // LÓGICA DE SALTO DE DÍA MEJORADA
     if(p === 100 && ejercicios.length > 0) {
         setTimeout(() => {
             let sig = DB.diaActual + 1;
             let encontrado = false;
-            // Buscar el siguiente día con ejercicios
             for(let i = sig; i <= 7; i++){
                 if(DB.rutinas[i.toString()] && DB.rutinas[i.toString()].length > 0){
                     DB.diaActual = i; 
                     document.getElementById('selector-dia-manual').value = i;
                     encontrado = true;
-                    alert("¡Día " + (i-1) + " completado! Pasando al Día " + i);
+                    alert("¡Pasando al Día " + i);
                     break;
                 }
             }
-            if(!encontrado) { 
-                alert("¡Felicidades! Terminaste todas tus rutinas."); 
-                reiniciarSemana();
-            }
-            save(); 
-            renderTodo();
+            if(!encontrado) { alert("¡Semana terminada!"); reiniciarSemana(); }
+            save(); renderTodo();
         }, 300);
     }
 }
@@ -225,7 +222,7 @@ function renderPlan() {
             DB.rutinas[diaStr].forEach((e, i) => {
                 html += `<div style='display:flex; justify-content:space-between; align-items:center; margin:8px 0; border-bottom:1px solid #eee; padding-bottom:5px;'>
                         <span>${e.nombre} <small>(${e.series})</small></span>
-                        <span style='color:red; cursor:pointer; font-weight:bold; padding:5px;' onclick='DB.rutinas[${d}].splice(${i},1);save();renderTodo();'>✕</span>
+                        <span style='color:red; cursor:pointer; font-weight:bold; padding:5px;' onclick='eliminarEjercicio(${d}, ${i})'>✕</span>
                       </div>`;
             });
             html += `</div>`;
@@ -234,22 +231,43 @@ function renderPlan() {
     visor.innerHTML = html || "<p style='text-align:center; color:var(--text-light)'>No hay ejercicios en el plan.</p>";
 }
 
-function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
-
+// FUNCIONES DE ACCIÓN CORREGIDAS
 function guardarEjercicio() {
-    const d = document.getElementById('r_dia').value, n = document.getElementById('r_nombre').value, s = document.getElementById('r_series').value, f = document.getElementById('r_file').files[0];
-    if(!n) return alert("Nombre obligatorio");
-    const add = (img = "") => { 
-        DB.rutinas[d].push({ nombre:n, series:s, img, done:false }); 
-        save(); 
+    const d = document.getElementById('r_dia').value;
+    const n = document.getElementById('r_nombre').value.trim();
+    const s = document.getElementById('r_series').value.trim();
+    const f = document.getElementById('r_file').files[0];
+
+    if(!n) { alert("Por favor ponle nombre al ejercicio"); return; }
+
+    const add = (imgData = "") => {
+        if(!DB.rutinas[d]) DB.rutinas[d] = [];
+        DB.rutinas[d].push({ nombre: n, series: s, img: imgData, done: false });
+        save();
         renderTodo();
+        // Limpiar campos
         document.getElementById('r_nombre').value = "";
         document.getElementById('r_series').value = "";
         document.getElementById('r_file').value = "";
+        alert("¡Ejercicio guardado en el Día " + d + "!");
     };
-    if(f) { const r = new FileReader(); r.onload = (e) => add(e.target.result); r.readAsDataURL(f); } else add();
+
+    if(f) {
+        const reader = new FileReader();
+        reader.onload = (e) => add(e.target.result);
+        reader.readAsDataURL(f);
+    } else {
+        add();
+    }
 }
 
+function eliminarEjercicio(dia, idx) {
+    DB.rutinas[dia.toString()].splice(idx, 1);
+    save();
+    renderTodo();
+}
+
+function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
 function guardarDieta() { const s = document.getElementById('d_menu_sel').value; DB.dieta[s] = { desayuno: document.getElementById('d_des').value, snack1: document.getElementById('d_s1').value, comida: document.getElementById('d_com').value, snack2: document.getElementById('d_s2').value, cena: document.getElementById('d_cen').value }; save(); alert("Dieta guardada"); }
 function cargarFormDieta() { const m = DB.dieta[document.getElementById('d_menu_sel').value] || {}; document.getElementById('d_des').value = m.desayuno || ""; document.getElementById('d_s1').value = m.snack1 || ""; document.getElementById('d_com').value = m.comida || ""; document.getElementById('d_s2').value = m.snack2 || ""; document.getElementById('d_cen').value = m.cena || ""; }
 function agregarSuplemento() { const n = document.getElementById('s_nombre').value; if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); document.getElementById('s_nombre').value = ""; document.getElementById('s_momento').value = ""; } }
@@ -279,8 +297,7 @@ function exportarData() {
 }
 
 function reiniciarSemana() {
-    DB.diaActual = 1; 
-    document.getElementById('selector-dia-manual').value = 1;
+    DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
     for(let d in DB.rutinas) DB.rutinas[d].forEach(e => e.done = false);
     save(); renderTodo();
 }
