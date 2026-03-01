@@ -123,6 +123,7 @@ function actualizarFrase() {
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
 
+// CARGA INICIAL CORREGIDA
 function load() {
     const data = localStorage.getItem(STORAGE_KEY);
     if(data) {
@@ -134,7 +135,8 @@ function load() {
                 document.getElementById('edit-socio-num').value = DB.socio;
                 document.getElementById('selector-dia-manual').value = DB.diaActual;
                 actualizarFrase();
-                renderTodo();
+                // Forzamos el renderizado de HOY y PLAN de inmediato
+                renderTodo(); 
             }
         } catch(e) { console.error(e); }
     }
@@ -146,6 +148,7 @@ function validarIngreso(t) {
     DB.socio = s; DB.tema = t; aplicarTema(t);
     document.getElementById('pantalla-inicio').style.display = 'none';
     save();
+    renderTodo(); // Carga todo tras el primer login
 }
 
 function aplicarTema(t) {
@@ -153,10 +156,17 @@ function aplicarTema(t) {
     document.getElementById('socio-display').innerText = "SOCIO: " + DB.socio;
 }
 
-function renderTodo() { renderEntrenamiento(); renderPlan(); renderSuples(); renderEvo(); cargarFormDieta(); }
+function renderTodo() { 
+    renderEntrenamiento(); 
+    renderPlan(); 
+    renderSuples(); 
+    renderEvo(); 
+    cargarFormDieta(); 
+}
 
 function renderEntrenamiento() {
     const cont = document.getElementById('listaEntrenamiento');
+    if(!cont) return;
     const ejercicios = DB.rutinas[DB.diaActual.toString()] || [];
     let completados = 0;
     cont.innerHTML = "";
@@ -169,31 +179,32 @@ function renderEntrenamiento() {
         </div>`;
     });
     const p = ejercicios.length ? (completados / ejercicios.length) * 100 : 0;
-    document.getElementById('bar').style.width = p + "%";
-
-    if(p === 100 && ejercicios.length > 0) {
-        setTimeout(() => {
-            let sig = DB.diaActual + 1;
-            let encontrado = false;
-            for(let i = sig; i <= 7; i++){
-                if(DB.rutinas[i.toString()] && DB.rutinas[i.toString()].length > 0){
-                    DB.diaActual = i; document.getElementById('selector-dia-manual').value = i;
-                    encontrado = true; alert("¡Día completado! Pasando al Día " + i);
-                    break;
-                }
-            }
-            if(!encontrado) { alert("¡Semana terminada! Reiniciando ciclo."); reiniciarSemana(); }
-            save(); renderEntrenamiento();
-        }, 600);
-    }
+    const bar = document.getElementById('bar');
+    if(bar) bar.style.width = p + "%";
 }
 
 function marcarEjercicio(idx) { DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done; save(); renderEntrenamiento(); }
-function reiniciarSemana() {
-    DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
-    for(let d in DB.rutinas) DB.rutinas[d].forEach(e => e.done = false);
-    save(); renderTodo();
+
+function renderPlan() {
+    const visor = document.getElementById('visor-plan-detallado');
+    if(!visor) return;
+    let h = ""; 
+    for(let d in DB.rutinas) { 
+        if(DB.rutinas[d].length > 0) {
+            h += `<div class='card'><b>DÍA ${d}</b><br>`;
+            DB.rutinas[d].forEach((e, i) => {
+                h += `<div style='display:flex; justify-content:space-between; margin:5px 0;'>
+                        <span>${e.nombre}</span>
+                        <span style='color:red; cursor:pointer' onclick='DB.rutinas[${d}].splice(${i},1);save();renderTodo();'>✕</span>
+                      </div>`;
+            });
+            h += `</div>`;
+        }
+    } 
+    visor.innerHTML = h || "<p style='text-align:center; color:var(--text-light)'>No hay ejercicios en el plan.</p>";
 }
+
+// RESTO DE FUNCIONES (IGUALES)
 function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
 function guardarEjercicio() {
     const d = document.getElementById('r_dia').value, n = document.getElementById('r_nombre').value, s = document.getElementById('r_series').value, f = document.getElementById('r_file').files[0];
@@ -201,15 +212,6 @@ function guardarEjercicio() {
     const add = (img = "") => { DB.rutinas[d].push({ nombre:n, series:s, img, done:false }); save(); renderTodo(); };
     if(f) { const r = new FileReader(); r.onload = (e) => add(e.target.result); r.readAsDataURL(f); } else add();
 }
-
-function renderPlan() {
-    let h = ""; for(let d in DB.rutinas) { if(DB.rutinas[d].length > 0) {
-        h += `<div class='card'><b>DÍA ${d}</b><br>`;
-        DB.rutinas[d].forEach((e, i) => h += `<div style='display:flex; justify-content:space-between; margin:5px 0;'><span>${e.nombre}</span><span style='color:red' onclick='DB.rutinas[${d}].splice(${i},1);save();renderTodo();'>✕</span></div>`);
-        h += `</div>`;
-    }} document.getElementById('visor-plan-detallado').innerHTML = h;
-}
-
 function guardarDieta() { const s = document.getElementById('d_menu_sel').value; DB.dieta[s] = { desayuno: document.getElementById('d_des').value, snack1: document.getElementById('d_s1').value, comida: document.getElementById('d_com').value, snack2: document.getElementById('d_s2').value, cena: document.getElementById('d_cen').value }; save(); alert("Dieta guardada"); }
 function cargarFormDieta() { const m = DB.dieta[document.getElementById('d_menu_sel').value] || {}; document.getElementById('d_des').value = m.desayuno || ""; document.getElementById('d_s1').value = m.snack1 || ""; document.getElementById('d_com').value = m.comida || ""; document.getElementById('d_s2').value = m.snack2 || ""; document.getElementById('d_cen').value = m.cena || ""; }
 function agregarSuplemento() { const n = document.getElementById('s_nombre').value; if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); } }
@@ -217,7 +219,6 @@ function renderSuples() { document.getElementById('lista-suples').innerHTML = DB
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
 function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
-// IMPORTACIÓN ESTABILIZADA: PRIMERO GUARDA, LUEGO RECARGA
 function importarData(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -226,17 +227,11 @@ function importarData(e) {
         try {
             const temp = JSON.parse(ev.target.result);
             if (temp.socio || temp.rutinas) { 
-                // Guardado forzado antes de cualquier otra acción
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(temp));
-                alert("Importación exitosa. Sincronizando datos...");
-                // Pequeña pausa para asegurar la escritura en memoria
+                alert("Importación exitosa.");
                 setTimeout(() => { location.reload(); }, 500);
-            } else {
-                alert("El archivo no tiene el formato correcto de MONOS FIT.");
             }
-        } catch(err) { 
-            alert("Error al leer el archivo JSON."); 
-        }
+        } catch(err) { alert("Error"); }
     };
     reader.readAsText(file);
 }
@@ -261,7 +256,7 @@ document.querySelectorAll('nav button').forEach(btn => {
     });
 });
 
-load();
+load(); // Se ejecuta al cargar la página
 </script>
 </body>
 </html>
