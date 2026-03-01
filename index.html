@@ -124,7 +124,7 @@ function actualizarFrase() {
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
 
 function load() {
-    const data = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('MONIS_FIT_PRO_VFINAL');
+    const data = localStorage.getItem(STORAGE_KEY);
     if(data) {
         try {
             DB = JSON.parse(data);
@@ -217,7 +217,7 @@ function renderSuples() { document.getElementById('lista-suples').innerHTML = DB
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
 function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
-// IMPORTACIÓN CORREGIDA PARA ACTUALIZAR VISTAS AUTOMÁTICAMENTE
+// IMPORTACIÓN ESTABILIZADA: PRIMERO GUARDA, LUEGO RECARGA
 function importarData(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -226,17 +226,17 @@ function importarData(e) {
         try {
             const temp = JSON.parse(ev.target.result);
             if (temp.socio || temp.rutinas) { 
-                DB = temp; 
-                save(); 
-                // Aseguramos que los valores en pantalla coincidan con la DB importada
-                document.getElementById('selector-dia-manual').value = DB.diaActual;
-                document.getElementById('edit-socio-num').value = DB.socio;
-                aplicarTema(DB.tema || 'niña');
-                renderTodo(); 
-                alert("Importación exitosa."); 
-                location.reload(); 
+                // Guardado forzado antes de cualquier otra acción
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(temp));
+                alert("Importación exitosa. Sincronizando datos...");
+                // Pequeña pausa para asegurar la escritura en memoria
+                setTimeout(() => { location.reload(); }, 500);
+            } else {
+                alert("El archivo no tiene el formato correcto de MONOS FIT.");
             }
-        } catch(err) { alert("Error en archivo"); }
+        } catch(err) { 
+            alert("Error al leer el archivo JSON."); 
+        }
     };
     reader.readAsText(file);
 }
