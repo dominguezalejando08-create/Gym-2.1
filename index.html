@@ -16,9 +16,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); width: 100vw; overflow-x: hidden; padding-bottom: 110px; }
         
-        /* PANTALLA DE BLOQUEO */
         #bloqueo-pestaña { position: fixed; inset: 0; background: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        
         #pantalla-inicio { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
         header { padding: 30px 20px; text-align: center; background: var(--gradient); color: white; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; position: relative; }
         #socio-display { position: absolute; top: 12px; left: 20px; font-size: 0.7rem; font-weight: 800; background: rgba(0,0,0,0.25); padding: 5px 12px; border-radius: 20px; }
@@ -108,30 +106,25 @@
 <section id="ajustes"><div class="card"><h3>👤 Socio</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button></div><div class="card"><h3>⚙️ Sistema</h3><button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button></div></section>
 
 <script>
-// --- CONTROL DE PESTAÑA ÚNICA ---
 const bc = new BroadcastChannel('monis_fit_global');
-let isMain = true;
-
 bc.postMessage({type: 'NEW_TAB_OPENED'});
 bc.onmessage = (e) => {
-    if (e.data.type === 'NEW_TAB_OPENED') {
-        bc.postMessage({type: 'ALREADY_ACTIVE'});
-    }
-    if (e.data.type === 'ALREADY_ACTIVE') {
-        isMain = false;
-        document.getElementById('bloqueo-pestaña').style.display = 'flex';
-    }
+    if (e.data.type === 'NEW_TAB_OPENED') bc.postMessage({type: 'ALREADY_ACTIVE'});
+    if (e.data.type === 'ALREADY_ACTIVE') document.getElementById('bloqueo-pestaña').style.display = 'flex';
 };
 
-// --- BASE DE DATOS ---
 const STORAGE_KEY = 'MONIS_FIT_PRO_VFINAL';
 let DB = { tema: 'niña', socio: "", diaActual: 1, rutinas: {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}, dieta: {menuA:{},menuB:{}}, suplementos: [], evo: [] };
-const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Cada gota de sudor cuenta."];
+const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Cada gota de sudor cuenta.", "Fuerte es quien no se rinde.", "Hoy es un gran día para entrenar.", "Tu única competencia eres tú mismo."];
+
+function actualizarFrase() {
+    document.getElementById('frase-momento').innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
+}
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
 
 function load() {
-    const data = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('MONIS_FIT_FINAL');
+    const data = localStorage.getItem(STORAGE_KEY);
     if(data) {
         try {
             DB = JSON.parse(data);
@@ -140,10 +133,10 @@ function load() {
                 document.getElementById('pantalla-inicio').style.display = 'none';
                 document.getElementById('edit-socio-num').value = DB.socio;
                 document.getElementById('selector-dia-manual').value = DB.diaActual;
-                document.getElementById('frase-momento').innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
+                actualizarFrase();
                 renderTodo();
             }
-        } catch(e) { console.error("Error cargando datos"); }
+        } catch(e) { console.error(e); }
     }
 }
 
@@ -196,15 +189,12 @@ function renderEntrenamiento() {
 }
 
 function marcarEjercicio(idx) { DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done; save(); renderEntrenamiento(); }
-
 function reiniciarSemana() {
     DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
     for(let d in DB.rutinas) DB.rutinas[d].forEach(e => e.done = false);
     save(); renderTodo();
 }
-
 function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
-
 function guardarEjercicio() {
     const d = document.getElementById('r_dia').value, n = document.getElementById('r_nombre').value, s = document.getElementById('r_series').value, f = document.getElementById('r_file').files[0];
     if(!n) return;
@@ -227,7 +217,6 @@ function renderSuples() { document.getElementById('lista-suples').innerHTML = DB
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
 function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
-// --- IMPORTACIÓN FINAL CORREGIDA ---
 function importarData(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -235,13 +224,8 @@ function importarData(e) {
     reader.onload = function(ev) {
         try {
             const temp = JSON.parse(ev.target.result);
-            if (temp.socio || temp.rutinas) {
-                DB = temp;
-                save();
-                alert("Importación exitosa. Cargando...");
-                window.location.reload();
-            }
-        } catch(err) { alert("Archivo no válido"); }
+            if (temp.socio || temp.rutinas) { DB = temp; save(); location.reload(); }
+        } catch(err) { alert("Error"); }
     };
     reader.readAsText(file);
 }
@@ -262,6 +246,7 @@ document.querySelectorAll('nav button').forEach(btn => {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.section).classList.add('active');
+        actualizarFrase(); // <--- CAMBIA FRASE AL CAMBIAR DE SECCIÓN
     });
 });
 
