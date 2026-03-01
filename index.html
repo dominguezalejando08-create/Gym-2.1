@@ -3,124 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONOS FIT | Pro Training</title>
+    <title>MONOS FIT PRO | Elite Training</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --secondary: #1e293b;
-            --accent: #22c55e;
-            --danger: #ef4444;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #10b981;
+            --danger: #f43f5e;
             --warning: #f59e0b;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --radius: 16px;
         }
 
         body {
             margin: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
             color: var(--text-main);
-            padding-bottom: 40px;
+            line-height: 1.6;
+            padding-bottom: 60px;
         }
 
-        /* --- Header & Nav --- */
+        /* --- Header & Frases --- */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            padding: 1.5rem 1rem;
+            padding: 3rem 1rem;
             text-align: center;
-            box-shadow: var(--shadow);
+            background: radial-gradient(circle at top, #1e40af 0%, var(--bg) 100%);
         }
+        header h1 { 
+            margin: 0; 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            letter-spacing: -1px;
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+        #frase-motivacional {
+            margin-top: 10px;
+            color: var(--primary);
+            font-weight: 600;
+            font-style: italic;
+            min-height: 24px;
+        }
+
+        /* --- Navegación Elite --- */
         nav {
             display: flex;
-            background: var(--secondary);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             overflow-x: auto;
         }
         nav button {
             flex: 1;
-            min-width: 90px;
+            min-width: 100px;
             border: none;
             background: transparent;
-            color: #94a3b8;
-            padding: 1rem 0.5rem;
+            color: var(--text-dim);
+            padding: 1.2rem 0.5rem;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             cursor: pointer;
+            transition: 0.3s;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        nav button.active { color: #fff; background: var(--primary); }
+        nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: rgba(59, 130, 246, 0.1); }
 
         /* --- Layout --- */
-        section { display: none; max-width: 800px; margin: 1.5rem auto; padding: 0 1rem; animation: slideUp 0.3s ease-out; }
+        section { display: none; max-width: 900px; margin: 2rem auto; padding: 0 1rem; animation: fadeIn 0.4s ease; }
         section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 1.8rem;
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
         }
 
-        /* --- Forms & Buttons --- */
-        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.8rem; color: var(--text-muted); }
+        h2 { font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+
+        /* --- Inputs y Botones Estilizados --- */
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 6px; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
         input, select {
-            width: 100%;
-            padding: 0.7rem;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            box-sizing: border-box;
-        }
-        .btn {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
             padding: 0.8rem;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
+            border-radius: 10px;
             width: 100%;
-            transition: 0.2s;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
         }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-success { background: var(--accent); color: #fff; }
-        .btn-danger { background: var(--danger); color: #fff; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
 
-        /* --- Evolución Table --- */
-        .history-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem; }
-        .history-table th { background: #f1f5f9; padding: 10px; text-align: left; color: var(--text-muted); }
-        .history-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        .btn {
+            padding: 0.9rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 14px var(--primary-glow); }
+        .btn-success { background: var(--accent); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; border: 1px solid #334155; color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        /* --- Tabla de Evolución Pro --- */
+        .table-container { overflow-x: auto; border-radius: 12px; background: #0f172a; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #1e293b; padding: 15px; text-align: left; color: var(--primary); font-size: 0.8rem; }
+        td { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+        tr:hover { background: rgba(255,255,255,0.02); }
 
         /* --- Dieta UI --- */
-        .diet-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-        .diet-day { padding: 8px 2px; text-align: center; border-radius: 6px; background: #f1f5f9; cursor: pointer; font-size: 0.7rem; border: 1px solid transparent; }
-        .diet-day.active-a { background: #dbeafe; border-color: var(--primary); }
-        .diet-day.active-b { background: #fef3c7; border-color: var(--warning); }
+        .diet-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .diet-day { padding: 12px 5px; text-align: center; border-radius: 10px; background: #0f172a; cursor: pointer; border: 1px solid #334155; font-size: 0.75rem; }
+        .diet-day.active-a { background: rgba(59, 130, 246, 0.2); border-color: var(--primary); color: var(--primary); }
+        .diet-day.active-b { background: rgba(245, 158, 11, 0.2); border-color: var(--warning); color: var(--warning); }
 
-        /* --- Exercies UI --- */
-        .exercise-item { display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-        .ex-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #eee; }
-        
+        /* --- Timer Flotante --- */
         #timer-display {
-            position: fixed; bottom: 20px; right: 20px; background: var(--secondary);
-            color: white; padding: 10px 20px; border-radius: 30px; display: none; z-index: 1000;
+            position: fixed; bottom: 30px; right: 30px; 
+            background: var(--primary); color: white; 
+            padding: 15px 25px; border-radius: 50px; 
+            font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: none; z-index: 1000; animation: bounce 0.5s infinite alternate;
         }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+
+        .ex-item { display: flex; align-items: center; gap: 20px; padding: 15px; background: #0f172a; border-radius: 12px; margin-bottom: 10px; }
+        .ex-img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; border: 1px solid #334155; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>🏋️ MONOS FITNESS 🐵</h1>
-    <p>Seguimiento Corporal Pro</p>
+    <h1>MONOS FIT PRO</h1>
+    <div id="frase-motivacional">Cargando motivación...</div>
 </header>
 
 <nav>
@@ -128,25 +168,25 @@
     <button data-section="rutina">Rutina</button>
     <button data-section="dieta">Dieta</button>
     <button data-section="progreso">Evolución</button>
-    <button data-section="config">Config</button>
+    <button data-section="config">Ajustes</button>
 </nav>
 
 <section id="semana" class="active">
-    <h2>📅 Mi semana</h2>
+    <h2>📊 Resumen Semanal</h2>
     <div id="resumenSemanal"></div>
-    <button class="btn btn-primary" onclick="reiniciarSemana()">🔄 Reiniciar Checkbox Semanal</button>
+    <button class="btn btn-outline" onclick="reiniciarSemana()">🔄 Reiniciar Progreso Semanal</button>
 </section>
 
 <section id="rutina">
     <div class="card">
-        <h3>Añadir Ejercicio</h3>
+        <h3>⚡ Añadir Nuevo Ejercicio</h3>
         <div class="grid-inputs">
             <label>Día <select id="diaRutina"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
-            <label>Ejercicio <input id="nombreEj" placeholder="Ej: Sentadillas"></label>
-            <label>Series <input id="series" placeholder="Ej: 4x12"></label>
+            <label>Ejercicio <input id="nombreEj" placeholder="Ej: Press Militar"></label>
+            <label>Series <input id="series" placeholder="Ej: 4x10"></label>
             <label>Imagen <input type="file" id="imgFile" accept="image/*"></label>
         </div>
-        <button class="btn btn-primary" onclick="agregarEjercicio()">+ Guardar Ejercicio</button>
+        <button class="btn btn-primary" style="width:100%" onclick="agregarEjercicio()">💾 Guardar en Rutina</button>
     </div>
     <div id="listaRutinas"></div>
 </section>
@@ -154,13 +194,13 @@
 <section id="dieta">
     <div id="dietaHoyContainer"></div>
     <div class="card">
-        <h3>⚙️ Configurar Menús</h3>
-        <div style="display:flex; gap:10px; margin-bottom:10px">
-            <button class="btn btn-primary" style="flex:1" onclick="cambiarEditorDieta('A')">Menú A</button>
-            <button class="btn btn-primary" style="background:#fbbf24; flex:1" onclick="cambiarEditorDieta('B')">Menú B</button>
+        <h3>🍏 Configuración de Menús</h3>
+        <div style="display:flex; gap:10px; margin-bottom:20px">
+            <button class="btn btn-outline" style="flex:1" onclick="cambiarEditorDieta('A')">Menú A (Volumen)</button>
+            <button class="btn btn-outline" style="flex:1" onclick="cambiarEditorDieta('B')">Menú B (Definición)</button>
         </div>
-        <div id="editorDietaForm" style="background:#f8fafc; padding:15px; border-radius:8px">
-            <h4 id="editTitle" style="margin:0 0 10px 0">Editando Menú A</h4>
+        <div id="editorDietaForm">
+            <h4 id="editTitle" style="color:var(--primary)">Editando Menú A</h4>
             <div class="grid-inputs">
                 <label>🍳 Desayuno <input id="d_desayuno"></label>
                 <label>🥪 Snack 1 <input id="d_snack1"></label>
@@ -168,7 +208,7 @@
                 <label>🍎 Snack 2 <input id="d_snack2"></label>
                 <label>🌙 Cena <input id="d_cena"></label>
             </div>
-            <button class="btn btn-success" onclick="guardarMenu()">💾 Guardar Cambios</button>
+            <button class="btn btn-success" style="width:100%" onclick="guardarMenu()">💾 Actualizar Plan</button>
         </div>
     </div>
     <div class="card">
@@ -178,9 +218,8 @@
 </section>
 
 <section id="progreso">
-    <h2>📊 Evolución Corporal</h2>
     <div class="card">
-        <h3>Nuevo Registro</h3>
+        <h3>📈 Nuevo Registro Corporal</h3>
         <div class="grid-inputs">
             <label>Peso (kg) <input id="p_peso" type="number" step="0.1"></label>
             <label>Grasa (%) <input id="p_grasa" type="number" step="0.1"></label>
@@ -188,37 +227,47 @@
             <label>Cintura (cm) <input id="p_cintura" type="number" step="0.1"></label>
             <label>Cadera (cm) <input id="p_cadera" type="number" step="0.1"></label>
         </div>
-        <button class="btn btn-success" onclick="guardarProgreso()">💾 Guardar Medidas de Hoy</button>
+        <button class="btn btn-success" style="width:100%" onclick="guardarProgreso()">💪 Registrar Medidas</button>
     </div>
 
-    <div class="card" style="overflow-x: auto;">
-        <h3>📈 Histórico de Cambios</h3>
-        <table class="history-table">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Peso</th>
-                    <th>Grasa</th>
-                    <th>Músc.</th>
-                    <th>Cint.</th>
-                    <th>Cad.</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody id="tablaProgreso"></tbody>
-        </table>
+    <div class="card">
+        <h3>📋 Historial de Progreso</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Peso</th>
+                        <th>Grasa</th>
+                        <th>Músc.</th>
+                        <th>Cint.</th>
+                        <th>Cad.</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProgreso"></tbody>
+            </table>
+        </div>
     </div>
 </section>
 
 <section id="config">
     <div class="card">
-        <h3>Gestión de Datos</h3>
-        <button class="btn btn-primary" style="margin-bottom:10px" onclick="exportarDatos()">📤 Exportar Backup</button>
-        <button class="btn btn-danger" onclick="borrarTodo()">⚠️ Reset Total</button>
+        <h3>💾 Copia de Seguridad</h3>
+        <p style="font-size: 0.8rem; color: var(--text-dim);">No pierdas tu progreso. Exporta tus datos o impórtalos en otro dispositivo.</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+            <button class="btn btn-primary" onclick="exportarDatos()">📤 Exportar</button>
+            <button class="btn btn-success" onclick="document.getElementById('fileImport').click()">📥 Importar</button>
+        </div>
+        <input type="file" id="fileImport" style="display:none" onchange="importarDatos(event)">
+        
+        <hr style="border:0; border-top:1px solid #334155; margin:2rem 0">
+        
+        <button class="btn btn-danger" style="width:100%" onclick="borrarTodo()">⚠️ Borrar todos los datos</button>
     </div>
 </section>
 
-<div id="timer-display">Descanso: <span id="timer-secs">60</span>s</div>
+<div id="timer-display">DESCANSO: <span id="timer-secs">60</span>s</div>
 
 <script>
 let DB = {
@@ -227,9 +276,27 @@ let DB = {
     progreso: []
 };
 
-function saveDB() { localStorage.setItem('MONOS_FIT_DB_V2', JSON.stringify(DB)); }
+// --- FRASES MOTIVACIONALES ---
+const frases = [
+    "No te detengas cuando canses, detente cuando termines.",
+    "La disciplina es hacer lo que debes, aunque no quieras.",
+    "Tu única competencia es la persona que viste al espejo ayer.",
+    "El dolor es temporal, el orgullo de haberlo logrado es para siempre.",
+    "Entrena como un mono, conviértete en gorila.",
+    "No busques excusas, busca resultados.",
+    "Un entrenamiento de 1 hora es solo el 4% de tu día.",
+    "La fuerza no viene de la capacidad corporal, sino de la voluntad del alma."
+];
+
+function mostrarFrase() {
+    const random = Math.floor(Math.random() * frases.length);
+    document.getElementById('frase-motivacional').textContent = frases[random];
+}
+
+// --- CORE ---
+function saveDB() { localStorage.setItem('MONOS_FIT_ULTIMATE', JSON.stringify(DB)); }
 function loadDB() {
-    const data = localStorage.getItem('MONOS_FIT_DB_V2');
+    const data = localStorage.getItem('MONOS_FIT_ULTIMATE');
     if (data) DB = JSON.parse(data);
     else { for(let i=1; i<=28; i++) DB.dieta.plan[i] = (i%2===0) ? 'B' : 'A'; saveDB(); }
 }
@@ -244,23 +311,26 @@ document.querySelectorAll('nav button').forEach(btn => {
         if(btn.dataset.section === 'semana') renderSemana();
         if(btn.dataset.section === 'dieta') renderDieta();
         if(btn.dataset.section === 'progreso') renderProgreso();
+        if(btn.dataset.section === 'rutina') renderListaEjercicios();
     });
 });
 
-// --- RUTINAS ---
+// --- EJERCICIOS ---
 function agregarEjercicio() {
     const dia = document.getElementById('diaRutina').value;
     const nombre = document.getElementById('nombreEj').value;
     const series = document.getElementById('series').value;
     const file = document.getElementById('imgFile').files[0];
-    if(!nombre || !series) return alert("Faltan datos");
+    if(!nombre || !series) return alert("Completa los campos obligatorios");
 
     const reader = new FileReader();
     reader.onload = (e) => {
         if(!DB.rutinas[dia]) DB.rutinas[dia] = [];
         DB.rutinas[dia].push({ nombre, series, img: e.target.result || '', done: false });
         saveDB(); renderListaEjercicios();
-        alert("¡Ejercicio listo!");
+        alert("¡Ejercicio añadido con éxito!");
+        document.getElementById('nombreEj').value = '';
+        document.getElementById('series').value = '';
     };
     if(file) reader.readAsDataURL(file); else reader.onload({});
 }
@@ -271,25 +341,30 @@ function renderListaEjercicios() {
     Object.keys(DB.rutinas).sort().forEach(dia => {
         const div = document.createElement('div');
         div.className = 'card';
-        div.innerHTML = `<h3>Día ${dia}</h3>`;
+        div.innerHTML = `<h3 style="color:var(--primary)">Día ${dia}</h3>`;
         DB.rutinas[dia].forEach((ej, idx) => {
             div.innerHTML += `
-                <div class="exercise-item">
+                <div class="ex-item">
                     <img src="${ej.img || ''}" class="ex-img" onerror="this.style.display='none'">
-                    <div style="flex:1"><b>${ej.nombre}</b><br><small>${ej.series}</small></div>
-                    <input type="checkbox" ${ej.done?'checked':''} onchange="toggleEj(${dia},${idx})">
-                    <button class="btn btn-danger" style="width:auto; padding:5px 10px" onclick="eliminarEj(${dia},${idx})">🗑️</button>
+                    <div style="flex:1">
+                        <div style="font-weight:800">${ej.nombre}</div>
+                        <div style="color:var(--text-dim); font-size:0.8rem">${ej.series}</div>
+                    </div>
+                    <input type="checkbox" style="width:25px; height:25px" ${ej.done?'checked':''} onchange="toggleEj(${dia},${idx})">
+                    <button class="btn btn-danger" style="padding:8px" onclick="eliminarEj(${dia},${idx})">🗑️</button>
                 </div>`;
         });
         container.appendChild(div);
     });
 }
+
 function toggleEj(dia, idx) { 
     DB.rutinas[dia][idx].done = !DB.rutinas[dia][idx].done; 
     if(DB.rutinas[dia][idx].done) iniciarDescanso();
     saveDB(); 
 }
-function eliminarEj(dia, idx) { DB.rutinas[dia].splice(idx,1); saveDB(); renderListaEjercicios(); }
+
+function eliminarEj(dia, idx) { if(confirm("¿Eliminar ejercicio?")) { DB.rutinas[dia].splice(idx,1); saveDB(); renderListaEjercicios(); } }
 
 function iniciarDescanso() {
     const display = document.getElementById('timer-display');
@@ -297,43 +372,54 @@ function iniciarDescanso() {
     let tiempo = 60; display.style.display = 'block';
     const int = setInterval(() => {
         tiempo--; secsText.textContent = tiempo;
-        if(tiempo <= 0) { clearInterval(int); display.innerHTML = "🦍 ¡DALE!"; setTimeout(()=>display.style.display='none',2000); }
+        if(tiempo <= 0) { clearInterval(int); display.innerHTML = "🏁 ¡A DARLE!"; setTimeout(()=>display.style.display='none',2000); }
     }, 1000);
 }
 
 // --- DIETA ---
 let editMenu = 'A';
 function cambiarEditorDieta(t) {
-    editMenu = t; document.getElementById('editTitle').textContent = `Editando Menú ${t}`;
+    editMenu = t; 
+    document.getElementById('editTitle').textContent = `Editando Menú ${t}`;
+    document.getElementById('editTitle').style.color = (t === 'A' ? 'var(--primary)' : 'var(--warning)');
     const m = DB.dieta[`menu${t}`];
     ['desayuno','snack1','comida','snack2','cena'].forEach(k => document.getElementById(`d_${k}`).value = m[k] || '');
 }
+
 function guardarMenu() {
+    if(!DB.dieta[`menu${editMenu}`]) DB.dieta[`menu${editMenu}`] = {};
     const m = DB.dieta[`menu${editMenu}`];
     ['desayuno','snack1','comida','snack2','cena'].forEach(k => m[k] = document.getElementById(`d_${k}`).value);
-    saveDB(); renderDieta(); alert("Menú guardado");
+    saveDB(); renderDieta(); alert("Plan de alimentación actualizado");
 }
+
 function renderDieta() {
     const grid = document.getElementById('grid28'); grid.innerHTML = '';
     for(let i=1; i<=28; i++) {
         const d = document.createElement('div');
         d.className = `diet-day ${DB.dieta.plan[i]=='A'?'active-a':'active-b'}`;
-        d.innerHTML = `${i}<br>${DB.dieta.plan[i]}`;
+        d.innerHTML = `<b>${i}</b><br>${DB.dieta.plan[i]}`;
         d.onclick = () => { DB.dieta.plan[i] = DB.dieta.plan[i]=='A'?'B':'A'; saveDB(); renderDieta(); };
         grid.appendChild(d);
     }
     const hoy = ((new Date().getDate()-1)%28)+1;
     const m = DB.dieta[`menu${DB.dieta.plan[hoy]}`];
     document.getElementById('dietaHoyContainer').innerHTML = `
-        <div class="card" style="border-left:5px solid var(--accent)">
-            <h3 style="margin:0">Hoy: Menú ${DB.dieta.plan[hoy]} (Día ${hoy})</h3>
-            <p style="font-size:0.9rem">🍳 ${m.desayuno||'---'} | 🥪 ${m.snack1||'---'} | 🍽️ ${m.comida||'---'} | 🍎 ${m.snack2||'---'} | 🌙 ${m.cena||'---'}</p>
+        <div class="card" style="border-left:5px solid var(--primary)">
+            <h3 style="margin:0 0 10px 0">🍽️ Menú para Hoy (Día ${hoy})</h3>
+            <div style="font-size:0.85rem; display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                <div>🍳 <b>Desayuno:</b> ${m.desayuno||'No definido'}</div>
+                <div>🥪 <b>Snack 1:</b> ${m.snack1||'No definido'}</div>
+                <div>🍽️ <b>Comida:</b> ${m.comida||'No definido'}</div>
+                <div>🍎 <b>Snack 2:</b> ${m.snack2||'No definido'}</div>
+                <div style="grid-column: span 2">🌙 <b>Cena:</b> ${m.cena||'No definido'}</div>
+            </div>
         </div>`;
 }
 
-// --- PROGRESO (EVOLUCIÓN) ---
+// --- EVOLUCIÓN ---
 function guardarProgreso() {
-    const registro = {
+    const p = {
         fecha: new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}),
         peso: document.getElementById('p_peso').value || '-',
         grasa: document.getElementById('p_grasa').value || '-',
@@ -341,60 +427,81 @@ function guardarProgreso() {
         cintura: document.getElementById('p_cintura').value || '-',
         cadera: document.getElementById('p_cadera').value || '-'
     };
-    DB.progreso.unshift(registro);
+    DB.progreso.unshift(p);
     saveDB(); renderProgreso();
-    // Limpiar inputs
     ['p_peso','p_grasa','p_musculo','p_cintura','p_cadera'].forEach(id => document.getElementById(id).value = '');
 }
 
 function renderProgreso() {
-    const tabla = document.getElementById('tablaProgreso');
-    tabla.innerHTML = '';
-    DB.progreso.forEach((r, idx) => {
-        tabla.innerHTML += `
-            <tr>
-                <td>${r.fecha}</td>
-                <td>${r.peso}k</td>
-                <td>${r.grasa}%</td>
-                <td>${r.musculo}%</td>
-                <td>${r.cintura}</td>
-                <td>${r.cadera}</td>
-                <td><button onclick="borrarProgres(${idx})" style="border:none; background:none; cursor:pointer">❌</button></td>
-            </tr>`;
+    const t = document.getElementById('tablaProgreso'); t.innerHTML = '';
+    DB.progreso.forEach((r, i) => {
+        t.innerHTML += `<tr>
+            <td>${r.fecha}</td><td>${r.peso}kg</td><td>${r.grasa}%</td><td>${r.musculo}%</td><td>${r.cintura}cm</td><td>${r.cadera}cm</td>
+            <td><button class="btn" onclick="borrarP(${i})" style="padding:5px">❌</button></td>
+        </tr>`;
     });
 }
-function borrarProgres(idx) { DB.progreso.splice(idx,1); saveDB(); renderProgreso(); }
+function borrarP(i) { if(confirm("¿Eliminar registro?")) { DB.progreso.splice(i,1); saveDB(); renderProgreso(); } }
 
 // --- SEMANA ---
 function renderSemana() {
-    const container = document.getElementById('resumenSemanal');
-    container.innerHTML = '';
+    const res = document.getElementById('resumenSemanal'); res.innerHTML = '';
     for(let i=1; i<=6; i++) {
         const ejs = DB.rutinas[i] || [];
         const done = ejs.filter(e => e.done).length;
         const total = ejs.length;
         const pc = total ? Math.round((done/total)*100) : 0;
-        container.innerHTML += `
-            <div class="card" style="padding:10px; margin-bottom:10px">
-                <div style="display:flex; justify-content:space-between"><b>Día ${i}</b> <span>${pc}%</span></div>
-                <div style="background:#eee; height:8px; border-radius:4px; margin-top:5px">
-                    <div style="background:var(--accent); height:100%; width:${pc}%; border-radius:4px; transition:0.3s"></div>
+        res.innerHTML += `
+            <div class="card" style="padding:15px; margin-bottom:10px">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+                    <b>Día de Entrenamiento ${i}</b>
+                    <span style="color:var(--primary)">${pc}%</span>
+                </div>
+                <div style="background:#0f172a; height:10px; border-radius:5px; overflow:hidden">
+                    <div style="background:var(--primary); height:100%; width:${pc}%; transition:0.5s"></div>
                 </div>
             </div>`;
     }
 }
-function reiniciarSemana() { if(confirm("¿Desmarcar todo?")) { Object.keys(DB.rutinas).forEach(d=>DB.rutinas[d].forEach(e=>e.done=false)); saveDB(); renderSemana(); } }
-function exportarDatos() { 
+
+function reiniciarSemana() { if(confirm("¿Reiniciar el progreso de la semana?")) { Object.keys(DB.rutinas).forEach(d=>DB.rutinas[d].forEach(e=>e.done=false)); saveDB(); renderSemana(); } }
+
+// --- IMPORT/EXPORT ---
+function exportarDatos() {
     const blob = new Blob([JSON.stringify(DB)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'monos_fit.json'; a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'monos_fit_backup.json'; a.click();
 }
-function borrarTodo() { if(confirm("CUIDADO: Borrará TODO")) { localStorage.clear(); location.reload(); } }
 
-// INIT
+function importarDatos(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if(data.rutinas && data.dieta) {
+                DB = data;
+                saveDB();
+                alert("✅ Datos importados con éxito");
+                location.reload();
+            } else {
+                alert("❌ El archivo no tiene el formato correcto");
+            }
+        } catch(err) {
+            alert("❌ Error al leer el archivo");
+        }
+    };
+    reader.readAsText(file);
+}
+
+function borrarTodo() { if(confirm("¡ALERTA! Se borrará todo permanentemente.")) { localStorage.clear(); location.reload(); } }
+
+// INICIALIZACIÓN
 loadDB();
-renderListaEjercicios();
+mostrarFrase();
 renderSemana();
+renderListaEjercicios();
 </script>
 </body>
 </html>
