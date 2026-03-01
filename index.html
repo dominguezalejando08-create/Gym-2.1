@@ -100,34 +100,47 @@
 <section id="ajustes"><div class="card"><h3>👤 Socio</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button></div><div class="card"><h3>⚙️ Sistema</h3><button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button></div></section>
 
 <script>
-// BROADCAST PARA PESTAÑA ÚNICA
+// --- CONTROL DE PESTAÑA ÚNICA ---
 const bc = new BroadcastChannel('monis_fit_channel');
-bc.postMessage('ping');
+bc.postMessage('check_active');
 bc.onmessage = (e) => {
-    if(e.data === 'ping') bc.postMessage('pong');
-    if(e.data === 'pong') { alert("App ya abierta."); window.close(); }
+    if (e.data === 'check_active') bc.postMessage('is_active');
+    if (e.data === 'is_active') {
+        alert("¡Atención! MONIS FIT ya está abierto en otra pestaña. Por favor, usa la ventana activa para evitar pérdida de datos.");
+        window.location.href = "about:blank"; // Redirige para invalidar la pestaña duplicada
+    }
 };
 
+// --- BASE DE DATOS Y CONFIGURACIÓN ---
 let DB = { tema: 'niña', socio: "", diaActual: 1, rutinas: {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}, dieta: {menuA:{},menuB:{}}, suplementos: [], evo: [] };
 const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Fuerte es quien no se rinde.", "Cada gota de sudor cuenta."];
 
-// LLAVE ÚNICA PARA ESTA VERSIÓN
-const STORAGE_KEY = 'MONIS_FIT_FINAL';
+// Usamos una llave genérica para detectar datos de versiones previas también
+const KEYS_TO_CHECK = ['MONOS_FIT_PRO_V4', 'MONIS_FIT_PRO_V5', 'MONIS_FIT_FINAL'];
+const CURRENT_KEY = 'MONIS_FIT_FINAL';
 
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
+function save() { localStorage.setItem(CURRENT_KEY, JSON.stringify(DB)); }
 
 function load() {
-    const data = localStorage.getItem(STORAGE_KEY);
+    let data = null;
+    // Buscamos en todas las llaves posibles para no perder datos al cambiar nombres
+    for (let key of KEYS_TO_CHECK) {
+        data = localStorage.getItem(key);
+        if (data) break;
+    }
+
     if(data) {
-        DB = JSON.parse(data);
-        if(DB.socio) {
-            aplicarTema(DB.tema || 'niña');
-            document.getElementById('pantalla-inicio').style.display = 'none';
-            document.getElementById('edit-socio-num').value = DB.socio;
-            document.getElementById('selector-dia-manual').value = DB.diaActual;
-            document.getElementById('frase-momento').innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
-            renderTodo();
-        }
+        try {
+            DB = JSON.parse(data);
+            if(DB.socio) {
+                aplicarTema(DB.tema || 'niña');
+                document.getElementById('pantalla-inicio').style.display = 'none';
+                document.getElementById('edit-socio-num').value = DB.socio;
+                document.getElementById('selector-dia-manual').value = DB.diaActual;
+                document.getElementById('frase-momento').innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
+                renderTodo();
+            }
+        } catch(e) { console.error("Error cargando DB"); }
     }
 }
 
@@ -173,13 +186,14 @@ function renderEntrenamiento() {
                     break;
                 }
             }
-            if(!encontrado) { alert("¡Semana terminada! Reiniciando."); reiniciarSemana(); }
+            if(!encontrado) { alert("¡Semana terminada! Reiniciando ciclo."); reiniciarSemana(); }
             save(); renderEntrenamiento();
         }, 600);
     }
 }
 
 function marcarEjercicio(idx) { DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done; save(); renderEntrenamiento(); }
+
 function reiniciarSemana() {
     DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
     for(let d in DB.rutinas) DB.rutinas[d].forEach(e => e.done = false);
@@ -187,6 +201,7 @@ function reiniciarSemana() {
 }
 
 function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
+
 function guardarEjercicio() {
     const d = document.getElementById('r_dia').value, n = document.getElementById('r_nombre').value, s = document.getElementById('r_series').value, f = document.getElementById('r_file').files[0];
     if(!n) return;
@@ -209,32 +224,41 @@ function renderSuples() { document.getElementById('lista-suples').innerHTML = DB
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
 function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
-// IMPORTACIÓN REFORZADA
+// --- IMPORTACIÓN CORREGIDA ---
 function importarData(e) {
-    const r = new FileReader();
-    r.onload = (ev) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
         try {
-            const temp = JSON.parse(ev.target.result);
-            // Fusionar datos antiguos con estructura nueva
-            DB = Object.assign(DB, temp);
-            if(!DB.socio) DB.socio = "Socio Recuperado";
-            save(); 
-            alert("¡Importación exitosa!");
-            window.location.reload(); 
-        } catch(err) { alert("Error al leer el archivo. Asegúrate que sea un JSON válido."); }
+            const importedContent = JSON.parse(ev.target.result);
+            // Validamos que sea un objeto de la app
+            if (importedContent.rutinas || importedContent.socio) {
+                // Sobrescribimos la DB actual con la importada
+                DB = Object.assign(DB, importedContent);
+                // Forzamos el guardado en LocalStorage
+                localStorage.setItem(CURRENT_KEY, JSON.stringify(DB));
+                alert("¡Datos cargados con éxito! La página se reiniciará para aplicar los cambios.");
+                setTimeout(() => { window.location.reload(); }, 300);
+            } else {
+                throw new Error("Formato inválido");
+            }
+        } catch(err) {
+            alert("Error: El archivo no es un respaldo válido de MONIS FIT.");
+        }
     };
-    r.readAsText(e.target.files[0]);
+    reader.readAsText(file);
 }
 
 function exportarData() {
     const blob = new Blob([JSON.stringify(DB)], {type:'application/json'});
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `backup_monis_fit.json`; a.click();
+    a.download = `backup_monis_fit_${DB.socio || 'pro'}.json`; a.click();
 }
 
 function actualizarSocio() { const n = document.getElementById('edit-socio-num').value.trim(); if(n) { DB.socio = n; save(); location.reload(); } }
-function eliminarTodo() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
-function eliminarTodasRutinas() { if(confirm("¿Borrar plan?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
+function eliminarTodo() { if(confirm("¿Borrar todo y empezar de cero?")) { localStorage.clear(); location.reload(); } }
+function eliminarTodasRutinas() { if(confirm("¿Borrar todo el plan de ejercicios?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
 
 document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', () => {
