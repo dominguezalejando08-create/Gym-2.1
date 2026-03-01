@@ -93,58 +93,10 @@
     <div id="visor-plan-detallado"></div>
 </section>
 
-<section id="dieta">
-    <div class="card">
-        <h3>🍴 Dieta</h3>
-        <select id="d_menu_sel" onchange="cargarFormDieta()"><option value="menuA">Menú A</option><option value="menuB">Menú B</option></select>
-        <textarea id="d_des" placeholder="Desayuno" rows="3"></textarea>
-        <textarea id="d_s1" placeholder="Snack 1" rows="3"></textarea>
-        <textarea id="d_com" placeholder="Comida" rows="3"></textarea>
-        <textarea id="d_s2" placeholder="Snack 2" rows="3"></textarea>
-        <textarea id="d_cen" placeholder="Cena" rows="3"></textarea>
-        <button class="btn btn-main" onclick="guardarDieta()">Guardar Dieta</button>
-    </div>
-</section>
-
-<section id="suples">
-    <div class="card">
-        <h3>💊 Suplementación</h3>
-        <input id="s_nombre" placeholder="Nombre">
-        <input id="s_momento" placeholder="Instrucciones">
-        <button class="btn btn-main" onclick="agregarSuplemento()">Añadir Suple</button>
-    </div>
-    <div id="lista-suples"></div>
-</section>
-
-<section id="progreso">
-    <div class="card">
-        <h3>📉 Evolución</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <input type="number" id="e_peso" placeholder="Peso">
-            <input type="number" id="e_cintura" placeholder="Cintura">
-            <input type="number" id="e_cadera" placeholder="Cadera">
-            <input type="number" id="e_grasa" placeholder="% Grasa">
-            <input type="number" id="e_musculo" placeholder="% Músculo">
-        </div>
-        <button class="btn btn-main" onclick="registrarEvo()">Guardar Métricas</button>
-    </div>
-    <div id="lista-evo"></div>
-</section>
-
-<section id="ajustes">
-    <div class="card">
-        <h3>👤 Socio</h3>
-        <input type="text" id="edit-socio-num">
-        <button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button>
-    </div>
-    <div class="card">
-        <h3>⚙️ Sistema</h3>
-        <button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button>
-        <button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
-        <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
-        <button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button>
-    </div>
-</section>
+<section id="dieta"><div class="card"><h3>🍴 Dieta</h3><select id="d_menu_sel" onchange="cargarFormDieta()"><option value="menuA">Menú A</option><option value="menuB">Menú B</option></select><textarea id="d_des" placeholder="Desayuno" rows="3"></textarea><textarea id="d_s1" placeholder="Snack 1" rows="3"></textarea><textarea id="d_com" placeholder="Comida" rows="3"></textarea><textarea id="d_s2" placeholder="Snack 2" rows="3"></textarea><textarea id="d_cen" placeholder="Cena" rows="3"></textarea><button class="btn btn-main" onclick="guardarDieta()">Guardar Dieta</button></div></section>
+<section id="suples"><div class="card"><h3>💊 Suplementación</h3><input id="s_nombre" placeholder="Nombre"><input id="s_momento" placeholder="Instrucciones"><button class="btn btn-main" onclick="agregarSuplemento()">Añadir Suple</button></div><div id="lista-suples"></div></section>
+<section id="progreso"><div class="card"><h3>📉 Evolución</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><input type="number" id="e_peso" placeholder="Peso"><input type="number" id="e_cintura" placeholder="Cintura"><input type="number" id="e_cadera" placeholder="Cadera"><input type="number" id="e_grasa" placeholder="% Grasa"><input type="number" id="e_musculo" placeholder="% Músculo"></div><button class="btn btn-main" onclick="registrarEvo()">Guardar Métricas</button></div><div id="lista-evo"></div></section>
+<section id="ajustes"><div class="card"><h3>👤 Socio</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button></div><div class="card"><h3>⚙️ Sistema</h3><button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button></div></section>
 
 <script>
 // DETECTAR PESTAÑA ABIERTA
@@ -194,6 +146,7 @@ function aplicarTema(t) {
 
 function renderTodo() { renderEntrenamiento(); renderPlan(); renderSuples(); renderEvo(); cargarFormDieta(); }
 
+// LÓGICA DE AVANCE AUTOMÁTICO RESTAURADA
 function renderEntrenamiento() {
     const cont = document.getElementById('listaEntrenamiento');
     const ejercicios = DB.rutinas[DB.diaActual.toString()] || [];
@@ -204,21 +157,51 @@ function renderEntrenamiento() {
         cont.innerHTML += `<div class="ex-card">
             <img src="${ej.img || 'https://via.placeholder.com/60?text=FIT'}" class="ex-img">
             <div style="flex:1"><b>${ej.nombre}</b><br><small>${ej.series}</small></div>
-            <input type="checkbox" style="width:25px; height:25px;" ${ej.done?'checked':''} onchange="marcarEjercicio(${idx})">
+            <input type="checkbox" style="width:30px; height:30px;" ${ej.done?'checked':''} onchange="marcarEjercicio(${idx})">
         </div>`;
     });
     const p = ejercicios.length ? (completados / ejercicios.length) * 100 : 0;
     document.getElementById('bar').style.width = p + "%";
+
+    // Detectar fin de rutina para avanzar de día
+    if(p === 100 && ejercicios.length > 0) {
+        setTimeout(() => {
+            let sig = DB.diaActual + 1;
+            // Buscar si el siguiente día tiene algo, si no, buscar hasta el 7
+            let encontrado = false;
+            for(let i = sig; i <= 7; i++){
+                if(DB.rutinas[i.toString()] && DB.rutinas[i.toString()].length > 0){
+                    DB.diaActual = i;
+                    document.getElementById('selector-dia-manual').value = i;
+                    encontrado = true;
+                    alert("¡Rutina completada! Pasando al Día " + i);
+                    break;
+                }
+            }
+            if(!encontrado) {
+                alert("¡Semana completada! Reiniciando ciclo y quitando palomitas.");
+                reiniciarSemana();
+            }
+            save(); renderEntrenamiento();
+        }, 600);
+    }
 }
 
 function marcarEjercicio(idx) { DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done; save(); renderEntrenamiento(); }
 
-function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
+function reiniciarSemana() {
+    DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
+    for(let d in DB.rutinas) {
+        DB.rutinas[d].forEach(e => e.done = false);
+    }
+    save(); renderTodo();
+}
 
+function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
 function guardarEjercicio() {
     const d = document.getElementById('r_dia').value, n = document.getElementById('r_nombre').value, s = document.getElementById('r_series').value, f = document.getElementById('r_file').files[0];
-    if(!n) return alert("Ponle nombre al ejercicio");
-    const add = (img = "") => { DB.rutinas[d].push({ nombre:n, series:s, img, done:false }); save(); renderTodo(); alert("¡Guardado!"); };
+    if(!n) return alert("Nombre necesario");
+    const add = (img = "") => { DB.rutinas[d].push({ nombre:n, series:s, img, done:false }); save(); renderTodo(); };
     if(f) { const r = new FileReader(); r.onload = (e) => add(e.target.result); r.readAsDataURL(f); } else add();
 }
 
@@ -230,43 +213,23 @@ function renderPlan() {
     }} document.getElementById('visor-plan-detallado').innerHTML = h;
 }
 
-function guardarDieta() { 
-    const s = document.getElementById('d_menu_sel').value; 
-    DB.dieta[s] = { 
-        desayuno: document.getElementById('d_des').value, 
-        snack1: document.getElementById('d_s1').value, 
-        comida: document.getElementById('d_com').value, 
-        snack2: document.getElementById('d_s2').value, 
-        cena: document.getElementById('d_cen').value 
-    }; 
-    save(); alert("Dieta guardada"); 
-}
-
-function cargarFormDieta() { 
-    const m = DB.dieta[document.getElementById('d_menu_sel').value] || {}; 
-    document.getElementById('d_des').value = m.desayuno || ""; 
-    document.getElementById('d_s1').value = m.snack1 || ""; 
-    document.getElementById('d_com').value = m.comida || ""; 
-    document.getElementById('d_s2').value = m.snack2 || ""; 
-    document.getElementById('d_cen').value = m.cena || ""; 
-}
+function guardarDieta() { const s = document.getElementById('d_menu_sel').value; DB.dieta[s] = { desayuno: document.getElementById('d_des').value, snack1: document.getElementById('d_s1').value, comida: document.getElementById('d_com').value, snack2: document.getElementById('d_s2').value, cena: document.getElementById('d_cen').value }; save(); alert("Dieta guardada"); }
+function cargarFormDieta() { const m = DB.dieta[document.getElementById('d_menu_sel').value] || {}; document.getElementById('d_des').value = m.desayuno || ""; document.getElementById('d_s1').value = m.snack1 || ""; document.getElementById('d_com').value = m.comida || ""; document.getElementById('d_s2').value = m.snack2 || ""; document.getElementById('d_cen').value = m.cena || ""; }
+function agregarSuplemento() { const n = document.getElementById('s_nombre').value; if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); } }
+function renderSuples() { document.getElementById('lista-suples').innerHTML = DB.suplementos.map((s, i) => `<div class="ex-card"><div style="flex:1"><b>${s.nombre}</b><br><small>${s.momento}</small></div><button style="border:none; background:none; color:red;" onclick="DB.suplementos.splice(${i},1);save();renderSuples();">🗑️</button></div>`).join(''); }
+function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
+function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
 function importarData(e) {
     const r = new FileReader();
     r.onload = (ev) => {
         try {
             const tempDB = JSON.parse(ev.target.result);
-            // Aseguramos que el socio esté presente para que la app lo reconozca al recargar
-            if(!tempDB.socio) tempDB.socio = "Socio Recuperado";
-            if(!tempDB.tema) tempDB.tema = "niña";
-            
             DB = tempDB;
             save(); 
-            alert("Backup cargado con éxito. La página se reiniciará.");
+            alert("Backup cargado con éxito.");
             window.location.reload(); 
-        } catch(err) { 
-            alert("El archivo no es válido."); 
-        }
+        } catch(err) { alert("Archivo no válido."); }
     };
     r.readAsText(e.target.files[0]);
 }
@@ -279,7 +242,7 @@ function exportarData() {
 
 function actualizarSocio() { const n = document.getElementById('edit-socio-num').value.trim(); if(n) { DB.socio = n; save(); location.reload(); } }
 function eliminarTodo() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
-function eliminarTodasRutinas() { if(confirm("¿Borrar todo el plan?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
+function eliminarTodasRutinas() { if(confirm("¿Borrar plan?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
 
 document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', () => {
