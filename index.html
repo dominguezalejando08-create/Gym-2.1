@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONOS FIT | Auto-Flow</title>
+    <title>MONOS FIT | Auto-Flow & Phrases</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -14,7 +14,8 @@
         }
 
         .tema-niña {
-            --primary: #9d4edd; --accent: #ff85a1; --bg: #fff5f8; --gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            --primary: #9d4edd; --accent: #ff85a1; --bg: #fff5f8; 
+            --gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
         }
 
         .tema-niño {
@@ -26,10 +27,11 @@
         body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 80px; transition: 0.3s; }
 
         #pantalla-inicio { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        .btn-selector { padding: 20px 40px; margin: 10px; border-radius: 20px; border: none; font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 250px; color: white; transition: 0.2s; }
+        .btn-selector { padding: 20px 40px; margin: 10px; border-radius: 20px; border: none; font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 250px; color: white; }
 
         header { padding: 40px 20px; text-align: center; background: var(--gradient); color: white; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; box-shadow: var(--shadow); }
-        
+        #frase-dinamica { margin-top: 10px; font-size: 0.85rem; font-weight: 300; min-height: 1.2em; transition: opacity 0.3s; }
+
         nav { display: flex; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; justify-content: space-around; border-bottom: 1px solid rgba(0,0,0,0.05); }
         nav button { border: none; background: none; padding: 18px 10px; font-weight: 600; font-size: 0.8rem; color: var(--text-light); cursor: pointer; }
         nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
@@ -40,14 +42,13 @@
 
         .card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
         
-        /* Barra de Progreso */
-        .progress-container { background: #eee; border-radius: 10px; height: 10px; margin: 10px 0 20px 0; overflow: hidden; }
+        .progress-container { background: rgba(0,0,0,0.05); border-radius: 10px; height: 10px; margin: 10px 0 20px 0; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: 0.5s; }
 
         .ex-card { display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--card); border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--border); }
         .ex-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; background: #eee; }
 
-        .btn { padding: 14px; border-radius: 18px; border: none; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn { padding: 14px; border-radius: 18px; border: none; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; display: block; text-align: center; text-decoration: none; }
         .btn-main { background: var(--primary); color: white; }
         .btn-accent { background: var(--accent); color: white; }
 
@@ -67,7 +68,8 @@
 
 <header>
     <h1 id="titulo-header">MI RUTINA</h1>
-    <div id="status-dia">Día 1 - ¡A por ello!</div>
+    <div id="status-dia">Día 1 - ¡A darle!</div>
+    <div id="frase-dinamica"></div>
 </header>
 
 <nav>
@@ -81,7 +83,7 @@
 <section id="entrenar" class="active">
     <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
     <div id="listaEntrenamiento"></div>
-    <button id="btn-reset-dia" class="btn btn-accent" style="margin-top:20px; display:none;" onclick="reiniciarRutinaManual()">Reiniciar Día</button>
+    <button id="btn-reset-dia" class="btn btn-accent" style="margin-top:20px; display:none;" onclick="reiniciarRutinaManual()">🔄 Reiniciar Ciclo (Día 1)</button>
 </section>
 
 <section id="rutina">
@@ -98,15 +100,20 @@
     </div>
 </section>
 
-<section id="dieta"><div class="card"><h2>🍴 Menú</h2><input id="in_des" placeholder="Cena/Comida"><button class="btn btn-main" onclick="alert('Guardado')">Guardar</button></div></section>
-<section id="progreso"><div class="card"><h2>📉 Peso</h2><input type="number" id="ev_peso"><button class="btn btn-main" onclick="alert('Registrado')">Registrar</button></div></section>
+<section id="dieta"><div class="card"><h2>🍴 Menú</h2><input id="in_des" placeholder="Anotar comida del día..."><button class="btn btn-main" onclick="alert('Guardado')">Guardar</button></div></section>
+<section id="progreso"><div class="card"><h2>📉 Registro de Peso</h2><input type="number" id="ev_peso" placeholder="kg"><button class="btn btn-main" onclick="alert('Peso registrado')">Registrar</button></div></section>
 
 <section id="ajustes">
     <div class="card">
-        <h2>⚙️ Ajustes</h2>
-        <button class="btn btn-main" onclick="exportarData()">📤 Backup</button>
-        <button class="btn btn-accent" style="margin-top:10px" onclick="reiniciarPerfil()">🔄 Cambiar Niño/Niña</button>
-        <button class="btn" style="margin-top:10px; background:#ef4444; color:white" onclick="resetData()">🗑️ Borrar Todo</button>
+        <h2>⚙️ Gestión de Datos</h2>
+        <button class="btn btn-main" style="margin-bottom:10px" onclick="exportarData()">📤 Exportar Backup</button>
+        <button class="btn btn-accent" style="margin-bottom:10px" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
+        <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
+        
+        <hr style="margin:20px 0; opacity:0.1">
+        
+        <button class="btn" style="background:#94a3b8; color:white; margin-bottom:10px" onclick="reiniciarPerfil()">🔄 Cambiar Niño/Niña</button>
+        <button class="btn" style="background:#ef4444; color:white" onclick="resetData()">🗑️ Borrar Todo</button>
     </div>
 </section>
 
@@ -115,20 +122,38 @@
 <script>
 let DB = {
     tema: null,
-    diaActual: 1, // Controla si estamos en el 1 o el 2
+    diaActual: 1,
     rutinas: { "1": [], "2": [] }
 };
 
-function save() { localStorage.setItem('MONOS_FIT_AUTO', JSON.stringify(DB)); }
+const frases = [
+    "¡Eres más fuerte de lo que crees!", "Un paso a la vez, pero sin detenerse.", "La disciplina le gana al talento.", 
+    "¡Tu cuerpo te lo agradecerá!", "Hoy es un gran día para sudar.", "Enfócate en el progreso, no en la perfección.",
+    "¡No te rindas, ya casi lo logras!", "Entrenar es el mejor regalo para tu mente."
+];
+
+function cambiarFrase() {
+    const el = document.getElementById('frase-dinamica');
+    el.style.opacity = 0;
+    setTimeout(() => {
+        el.innerText = frases[Math.floor(Math.random() * frases.length)];
+        el.style.opacity = 1;
+    }, 300);
+}
+
+function save() { localStorage.setItem('MONOS_FIT_ULTIMATE', JSON.stringify(DB)); }
+
 function load() {
-    const data = localStorage.getItem('MONOS_FIT_AUTO');
+    const data = localStorage.getItem('MONOS_FIT_ULTIMATE');
     if(data) {
         DB = JSON.parse(data);
         if(DB.tema) aplicarTema(DB.tema);
     }
+    cambiarFrase();
 }
 
 function elegirTema(t) { DB.tema = t; aplicarTema(t); save(); }
+
 function aplicarTema(t) {
     document.body.className = 'tema-' + t;
     document.getElementById('pantalla-inicio').style.display = 'none';
@@ -136,6 +161,7 @@ function aplicarTema(t) {
     renderEntrenamiento();
 }
 
+// --- LÓGICA DE ENTRENAMIENTO (DÍA 1 -> DÍA 2) ---
 function renderEntrenamiento() {
     const cont = document.getElementById('listaEntrenamiento');
     const status = document.getElementById('status-dia');
@@ -144,12 +170,11 @@ function renderEntrenamiento() {
     
     let dia = DB.diaActual;
     let ejercicios = DB.rutinas[dia] || [];
-    
     cont.innerHTML = '';
     
     if(ejercicios.length === 0) {
-        cont.innerHTML = `<p style="text-align:center">No hay ejercicios en el Día ${dia}. Agrégalos en "PLAN".</p>`;
-        status.innerText = `Día ${dia} - Vacío`;
+        cont.innerHTML = `<p style="text-align:center; padding:20px;">No hay ejercicios en el Día ${dia}. <br>Agrégalos en la pestaña <b>PLAN</b>.</p>`;
+        status.innerText = `Día ${dia} - Sin ejercicios`;
         bar.style.width = "0%";
         return;
     }
@@ -165,29 +190,27 @@ function renderEntrenamiento() {
                 <div style="font-weight:600">${ej.nombre}</div>
                 <div style="font-size:0.75rem; color:var(--text-light)">${ej.series}</div>
             </div>
-            <input type="checkbox" style="width:25px; height:25px" ${ej.done?'checked':''} onchange="completarEj(${idx})">
+            <input type="checkbox" style="width:25px; height:25px; accent-color:var(--primary)" ${ej.done?'checked':''} onchange="completarEj(${idx})">
         `;
         cont.appendChild(div);
     });
 
     const porcentaje = (completados / ejercicios.length) * 100;
     bar.style.width = porcentaje + "%";
-    status.innerText = `Día ${dia} - ${Math.round(porcentaje)}% completado`;
+    status.innerText = `Día ${dia} - ${Math.round(porcentaje)}% hecho`;
     btnReset.style.display = "block";
 
-    // LÓGICA AUTOMÁTICA: Si llega al 100%
+    // SALTO AUTOMÁTICO DE DÍA
     if(porcentaje === 100) {
         setTimeout(() => {
             if(DB.diaActual === 1) {
-                alert("¡Felicidades! Día 1 terminado. Pasando al Día 2...");
+                alert("💪 ¡Día 1 completado! Pasando automáticamente al Día 2.");
                 DB.diaActual = 2;
-                save();
-                renderEntrenamiento();
+                save(); renderEntrenamiento();
             } else {
-                alert("¡Has completado el ciclo! Reiniciando al Día 1.");
-                reiniciarRutinaManual();
+                alert("🏆 ¡Ciclo terminado! Has completado ambos días.");
             }
-        }, 800);
+        }, 600);
     }
 }
 
@@ -195,17 +218,15 @@ function completarEj(idx) {
     DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done;
     if(DB.rutinas[DB.diaActual][idx].done) startTimer();
     save();
-    renderEntrenamiento(); // Aquí sí refrescamos para la barra de progreso y el cambio de día
+    renderEntrenamiento();
 }
 
 function reiniciarRutinaManual() {
-    // Ponemos todos los ejercicios de ambos días como no hechos
-    [1, 2].forEach(d => {
-        DB.rutinas[d].forEach(ej => ej.done = false);
-    });
-    DB.diaActual = 1;
-    save();
-    renderEntrenamiento();
+    if(confirm("¿Quieres reiniciar al Día 1 y limpiar marcas?")) {
+        [1, 2].forEach(d => DB.rutinas[d].forEach(ej => ej.done = false));
+        DB.diaActual = 1;
+        save(); renderEntrenamiento();
+    }
 }
 
 function startTimer() {
@@ -218,35 +239,56 @@ function startTimer() {
     }, 1000);
 }
 
+// --- PLAN ---
 function agregarEjercicio() {
     const dia = document.getElementById('r_dia').value;
     const nombre = document.getElementById('r_nombre').value;
     const series = document.getElementById('r_series').value;
     const file = document.getElementById('r_file').files[0];
-    if(!nombre) return alert("Falta nombre");
+    if(!nombre) return alert("Ponle un nombre al ejercicio");
     const reader = new FileReader();
     reader.onload = (e) => {
         DB.rutinas[dia].push({ nombre, series, img: e.target.result || '', done: false });
-        save(); alert("Añadido!");
+        save(); alert("¡Guardado en el Plan!");
         document.getElementById('r_nombre').value = '';
+        document.getElementById('r_series').value = '';
     };
     if(file) reader.readAsDataURL(file); else reader.onload({});
 }
 
-// --- Navegación ---
+// --- NAVEGACIÓN ---
 document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.section).classList.add('active');
+        
+        cambiarFrase(); // Cambia la frase cada vez que cambias de pestaña
         if(btn.dataset.section === 'entrenar') renderEntrenamiento();
     });
 });
 
-function reiniciarPerfil() { localStorage.clear(); location.reload(); }
-function resetData() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
-function exportarData() { const blob = new Blob([JSON.stringify(DB)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_fit.json'; a.click(); }
+// --- BACKUP & SISTEMA ---
+function exportarData() {
+    const blob = new Blob([JSON.stringify(DB)], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_fit.json'; a.click();
+}
+
+function importarData(e) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            DB = JSON.parse(ev.target.result);
+            save(); alert("✅ Backup cargado con éxito");
+            location.reload();
+        } catch(err) { alert("Archivo inválido"); }
+    };
+    reader.readAsText(e.target.files[0]);
+}
+
+function reiniciarPerfil() { if(confirm("¿Cambiar modo Niño/Niña?")) { DB.tema = null; save(); location.reload(); } }
+function resetData() { if(confirm("¿BORRAR TODO permanentemente?")) { localStorage.clear(); location.reload(); } }
 
 load();
 </script>
