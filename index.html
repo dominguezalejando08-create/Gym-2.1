@@ -3,104 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONOS FIT | Pink & Magic</title>
+    <title>MONOS FIT | Personal Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
         :root {
+            /* Colores por defecto (se cambian dinámicamente) */
             --primary: #9d4edd; 
-            --primary-light: #e0aaff;
             --accent: #ff85a1; 
             --bg: #fff5f8; 
             --card: #ffffff;
             --text: #4a1e4a; 
             --text-light: #8e7d8e;
-            --shadow: 0 10px 30px rgba(157, 78, 221, 0.1);
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
             --radius: 24px;
         }
 
+        /* --- TEMAS --- */
+        .tema-niña {
+            --primary: #9d4edd; --accent: #ff85a1; --bg: #fff5f8; --text: #4a1e4a;
+            --gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+        }
+
+        .tema-niño {
+            --primary: #2563eb; --accent: #22c55e; --bg: #0f172a; --card: #1e293b;
+            --text: #f8fafc; --text-light: #94a3b8;
+            --gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            padding-bottom: 80px;
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background-color: var(--bg); color: var(--text);
+            padding-bottom: 80px; transition: 0.3s;
+        }
+
+        /* --- Selector Inicial --- */
+        #pantalla-inicio {
+            position: fixed; inset: 0; background: #fff; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+        }
+        .btn-selector {
+            padding: 20px 40px; margin: 10px; border-radius: 20px; border: none;
+            font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 250px; color: white;
         }
 
         /* --- Header --- */
         header {
-            padding: 50px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-            color: white;
+            padding: 50px 20px; text-align: center;
+            background: var(--gradient, #eee); color: white;
             border-bottom-left-radius: 40px; border-bottom-right-radius: 40px;
             box-shadow: var(--shadow);
         }
-        header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
-        #frase-container { margin-top: 10px; font-weight: 300; font-size: 0.9rem; }
+        header h1 { margin: 0; font-size: 2rem; }
 
-        /* --- Nav Glassmorphism --- */
+        /* --- Nav --- */
         nav {
-            display: flex;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-            justify-content: space-around;
+            display: flex; background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000;
+            justify-content: space-around; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+        .tema-niño nav { background: rgba(30, 41, 59, 0.8); }
         nav button {
             border: none; background: none; padding: 18px 10px;
             font-weight: 600; font-size: 0.8rem; color: var(--text-light); cursor: pointer;
         }
         nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
-        /* --- Layout --- */
-        section { display: none; max-width: 600px; margin: 30px auto; padding: 0 20px; animation: fadeIn 0.5s ease; }
+        /* --- Cards & Layout --- */
+        section { display: none; max-width: 600px; margin: 30px auto; padding: 0 20px; animation: fadeIn 0.4s; }
         section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 25px; margin-bottom: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: var(--card); border-radius: var(--radius);
+            padding: 25px; margin-bottom: 25px; box-shadow: var(--shadow);
         }
 
-        /* --- Entrenamiento (Sin contracción) --- */
         .ex-card {
             display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: #fff; border-radius: 18px; margin-bottom: 12px;
-            border: 1px solid #f0e6f0;
+            background: var(--card); border-radius: 18px; margin-bottom: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        .ex-img { width: 65px; height: 65px; border-radius: 15px; object-fit: cover; background: #fafafa; }
-        
-        /* --- Inputs & Buttons --- */
-        input, select {
-            width: 100%; padding: 12px 15px; border-radius: 15px; border: 2px solid #f0e6f0;
-            margin-bottom: 15px; box-sizing: border-box; font-family: inherit;
-        }
+        .ex-img { width: 65px; height: 65px; border-radius: 15px; object-fit: cover; background: #eee; }
 
-        .btn {
-            padding: 14px; border-radius: 18px; border: none; font-weight: 600;
-            cursor: pointer; transition: 0.3s; font-family: inherit;
+        /* --- Buttons --- */
+        .btn { padding: 14px; border-radius: 18px; border: none; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: white; }
+        .btn-accent { background: var(--accent); color: white; margin-top: 10px; }
+
+        input, select {
+            width: 100%; padding: 12px; border-radius: 15px; border: 2px solid rgba(0,0,0,0.1);
+            margin-bottom: 15px; box-sizing: border-box; background: var(--card); color: var(--text);
         }
-        .btn-main { background: linear-gradient(135deg, var(--primary), #7b2cbf); color: white; width: 100%; }
-        .btn-pink { background: var(--accent); color: white; width: 100%; }
 
         #timer-box {
-            position: fixed; bottom: 25px; right: 25px; background: white;
-            border: 2px solid var(--primary-light); padding: 15px 25px;
-            border-radius: 50px; font-weight: 700; color: var(--primary);
-            box-shadow: var(--shadow); display: none; z-index: 2000;
+            position: fixed; bottom: 25px; right: 25px; background: var(--card);
+            border: 2px solid var(--primary); padding: 15px 25px;
+            border-radius: 50px; font-weight: 700; color: var(--primary); display: none;
         }
     </style>
 </head>
-<body>
+<body class="tema-niña">
+
+<div id="pantalla-inicio">
+    <h1>🐵 ¡Bienvenido a MONOS FIT!</h1>
+    <p>¿Quién va a entrenar hoy?</p>
+    <button class="btn-selector" style="background:#ff85a1" onclick="elegirTema('niña')">Soy Niña 🌸</button>
+    <button class="btn-selector" style="background:#2563eb" onclick="elegirTema('niño')">Soy Niño ⚡</button>
+</div>
 
 <header>
-    <h1>MONOS FIT 🌸</h1>
-    <div id="frase-container">Cargando inspiración...</div>
+    <h1 id="titulo-header">MONOS FIT</h1>
+    <div id="frase-container">Cargando motivación...</div>
 </header>
 
 <nav>
@@ -118,15 +133,15 @@
         <option value="3">Miércoles - Día 3</option><option value="4">Jueves - Día 4</option>
         <option value="5">Viernes - Día 5</option><option value="6">Sábado - Día 6</option>
     </select>
-    <div id="listaEntrenamiento" style="margin-top:15px"></div>
+    <div id="listaEntrenamiento"></div>
 </section>
 
 <section id="rutina">
     <div class="card">
         <h2>📝 Añadir Ejercicio</h2>
         <select id="r_dia"><option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option><option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option></select>
-        <input id="r_nombre" placeholder="Nombre (ej. Sentadillas)">
-        <input id="r_series" placeholder="Series/Reps (ej. 4x10)">
+        <input id="r_nombre" placeholder="Nombre (ej. Press Militar)">
+        <input id="r_series" placeholder="Series/Reps">
         <input type="file" id="r_file" accept="image/*">
         <button class="btn btn-main" onclick="agregarEjercicio()">Guardar Ejercicio</button>
     </div>
@@ -142,14 +157,10 @@
     <div id="menuHoyBox"></div>
     <div class="card">
         <h2>🍳 Menús Base</h2>
-        <div style="display:flex; gap:5px; margin-bottom:10px">
-            <button class="btn" style="flex:1" onclick="tabDieta('A')">Menú A</button>
-            <button class="btn" style="flex:1" onclick="tabDieta('B')">Menú B</button>
-        </div>
         <input id="in_des" placeholder="Desayuno">
         <input id="in_co" placeholder="Almuerzo">
         <input id="in_ce" placeholder="Cena">
-        <button class="btn btn-pink" onclick="guardarDieta()">Guardar Menú</button>
+        <button class="btn btn-accent" onclick="guardarDieta()">Guardar Menú</button>
     </div>
 </section>
 
@@ -157,7 +168,6 @@
     <div class="card">
         <h2>📉 Registro</h2>
         <input type="number" id="ev_peso" placeholder="Peso (kg)">
-        <input type="number" id="ev_cintura" placeholder="Cintura (cm)">
         <button class="btn btn-main" onclick="guardarProgreso()">Registrar</button>
     </div>
     <div id="historial-lista"></div>
@@ -165,13 +175,13 @@
 
 <section id="ajustes">
     <div class="card">
-        <h2>⚙️ Gestión de Datos</h2>
-        <p style="font-size:0.8rem; color:var(--text-light)">Como los navegadores protegen tus archivos, debes seleccionar el archivo manualmente, pero se cargará al instante.</p>
+        <h2>⚙️ Configuración</h2>
         <button class="btn btn-main" style="margin-bottom:10px" onclick="exportarData()">📤 Exportar Backup</button>
-        <button class="btn btn-pink" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
+        <button class="btn btn-accent" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
         <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
-        <hr style="margin:20px 0; border:0; border-top:1px solid #f0e6f0">
-        <button class="btn" style="width:100%; background:#ffccd5; color:#c9184a" onclick="resetData()">Eliminar todo</button>
+        <hr style="margin:20px 0; opacity:0.1">
+        <button class="btn" style="background:#94a3b8; color:white" onclick="reiniciarPerfil()">🔄 Cambiar Perfil (Niño/Niña)</button>
+        <button class="btn" style="margin-top:10px; background:#ef4444; color:white" onclick="resetData()">Eliminar todo</button>
     </div>
 </section>
 
@@ -179,21 +189,40 @@
 
 <script>
 let DB = {
+    tema: null,
     rutinas: { "1": [], "2": [], "3": [], "4": [], "5": [], "6": [] },
     dieta: { menuA: {}, menuB: {}, plan: {} },
     progreso: []
 };
 
-// --- CORE ---
-function save() { localStorage.setItem('MONOS_FIT_PINK_V3', JSON.stringify(DB)); }
+function save() { localStorage.setItem('MONOS_FIT_V4', JSON.stringify(DB)); }
 function load() {
-    const data = localStorage.getItem('MONOS_FIT_PINK_V3');
-    if(data) DB = JSON.parse(data);
-    else { for(let i=1; i<=28; i++) DB.dieta.plan[i] = (i%2===0)?'B':'A'; save(); }
+    const data = localStorage.getItem('MONOS_FIT_V4');
+    if(data) {
+        DB = JSON.parse(data);
+        if(DB.tema) aplicarTema(DB.tema);
+    } else {
+        for(let i=1; i<=28; i++) DB.dieta.plan[i] = (i%2===0)?'B':'A';
+    }
 }
 
-const frases = ["¡Tu esfuerzo hoy dará frutos mañana!", "La disciplina es amor propio.", "Sé tu propia motivación.", "El rosa es poder.", "Entrenar cambia el humor."];
-function mostrarFrase() { document.getElementById('frase-container').innerText = frases[Math.floor(Math.random()*frases.length)]; }
+function elegirTema(t) {
+    DB.tema = t;
+    aplicarTema(t);
+    save();
+}
+
+function aplicarTema(t) {
+    document.body.className = 'tema-' + t;
+    document.getElementById('pantalla-inicio').style.display = 'none';
+    document.getElementById('titulo-header').innerText = t === 'niña' ? 'MONOS FIT 🌸' : 'MONOS FIT ⚡';
+}
+
+function reiniciarPerfil() {
+    if(confirm("¿Quieres volver a elegir entre Niño o Niña?")) {
+        document.getElementById('pantalla-inicio').style.display = 'flex';
+    }
+}
 
 // --- NAVEGACIÓN ---
 document.querySelectorAll('nav button').forEach(btn => {
@@ -208,17 +237,11 @@ document.querySelectorAll('nav button').forEach(btn => {
     });
 });
 
-// --- ENTRENAMIENTO (FUNCIONALIDAD MEJORADA) ---
+// --- FUNCIONES (Lógica sin contracción) ---
 function renderEntrenamiento() {
     const dia = document.getElementById('selectDiaHoy').value;
     const cont = document.getElementById('listaEntrenamiento');
     cont.innerHTML = '';
-    
-    if (DB.rutinas[dia].length === 0) {
-        cont.innerHTML = '<p style="text-align:center; color:var(--text-light)">Aún no tienes ejercicios en el PLAN.</p>';
-        return;
-    }
-
     DB.rutinas[dia].forEach((ej, idx) => {
         const div = document.createElement('div');
         div.className = 'ex-card';
@@ -238,7 +261,6 @@ function toggleEj(dia, idx) {
     DB.rutinas[dia][idx].done = !DB.rutinas[dia][idx].done;
     if(DB.rutinas[dia][idx].done) startTimer();
     save();
-    // NOTA: No llamamos a renderEntrenamiento() aquí para evitar que la lista "salte" o se contraiga.
 }
 
 function startTimer() {
@@ -251,13 +273,13 @@ function startTimer() {
     }, 1000);
 }
 
-// --- RESTO DE FUNCIONES ---
+// --- RESTO DE LÓGICA ---
 function agregarEjercicio() {
     const dia = document.getElementById('r_dia').value;
     const nombre = document.getElementById('r_nombre').value;
     const series = document.getElementById('r_series').value;
     const file = document.getElementById('r_file').files[0];
-    if(!nombre) return alert("¡Falta el nombre!");
+    if(!nombre) return alert("Nombre obligatorio");
     const reader = new FileReader();
     reader.onload = (e) => {
         DB.rutinas[dia].push({ nombre, series, img: e.target.result || '', done: false });
@@ -270,28 +292,27 @@ function agregarEjercicio() {
 function calcularMacros() {
     const peso = document.getElementById('m_peso').value;
     if(!peso) return;
-    const p = peso * 2; const f = peso * 0.8;
     document.getElementById('macro-res').innerHTML = `
-        <div style="flex:1; background:var(--primary); color:white; padding:10px; border-radius:10px; text-align:center"><b>${Math.round(p)}g</b><br>Prot</div>
-        <div style="flex:1; background:var(--accent); color:white; padding:10px; border-radius:10px; text-align:center"><b>${Math.round(f)}g</b><br>Grasa</div>
+        <div style="flex:1; background:var(--primary); color:white; padding:10px; border-radius:10px; text-align:center"><b>${peso*2}g</b><br>Prot</div>
+        <div style="flex:1; background:var(--accent); color:white; padding:10px; border-radius:10px; text-align:center"><b>${peso*0.8}g</b><br>Grasa</div>
     `;
 }
 
 function renderDieta() {
     const hoy = ((new Date().getDate()-1)%28)+1;
-    const m = DB.dieta[`menu${DB.dieta.plan[hoy]}`];
-    document.getElementById('menuHoyBox').innerHTML = `<div class="card"><h2>🌸 Hoy (Día ${hoy})</h2><p>${m.des || 'Sin desayuno'}<br>${m.co || 'Sin comida'}<br>${m.ce || 'Sin cena'}</p></div>`;
+    const m = DB.dieta.menuA;
+    document.getElementById('menuHoyBox').innerHTML = `<div class="card"><h2>🍴 Menú del Día</h2><p>${m.des || '---'}<br>${m.co || '---'}<br>${m.ce || '---'}</p></div>`;
 }
 
-let dTab = 'A';
-function tabDieta(t) { dTab = t; const m = DB.dieta[`menu${t}`]; document.getElementById('in_des').value = m.des||''; document.getElementById('in_co').value = m.co||''; document.getElementById('in_ce').value = m.ce||''; }
-function guardarDieta() { DB.dieta[`menu${dTab}`] = { des: document.getElementById('in_des').value, co: document.getElementById('in_co').value, ce: document.getElementById('in_ce').value }; save(); renderDieta(); alert("Menú guardado"); }
+function guardarDieta() {
+    DB.dieta.menuA = { des: document.getElementById('in_des').value, co: document.getElementById('in_co').value, ce: document.getElementById('in_ce').value };
+    save(); renderDieta(); alert("Menú guardado");
+}
 
 function guardarProgreso() {
     const peso = document.getElementById('ev_peso').value;
-    const cint = document.getElementById('ev_cintura').value;
     if(!peso) return;
-    DB.progreso.unshift({ fecha: new Date().toLocaleDateString(), peso, cint });
+    DB.progreso.unshift({ fecha: new Date().toLocaleDateString(), peso });
     save(); renderProgreso();
 }
 
@@ -299,10 +320,9 @@ function renderProgreso() {
     const cont = document.getElementById('historial-lista');
     cont.innerHTML = '';
     DB.progreso.forEach((p, i) => {
-        cont.innerHTML += `<div class="card" style="display:flex; justify-content:space-between"><div><b>${p.fecha}</b>: ${p.peso}kg</div><button onclick="borrarP(${i})">🗑️</button></div>`;
+        cont.innerHTML += `<div class="card" style="display:flex; justify-content:space-between"><div><b>${p.fecha}</b>: ${p.peso}kg</div><button onclick="DB.progreso.splice(${i},1); save(); renderProgreso();">🗑️</button></div>`;
     });
 }
-function borrarP(i) { DB.progreso.splice(i,1); save(); renderProgreso(); }
 
 function exportarData() {
     const blob = new Blob([JSON.stringify(DB)], {type: 'application/json'});
@@ -311,24 +331,17 @@ function exportarData() {
 }
 
 function importarData(e) {
-    const file = e.target.files[0];
-    if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
-        try {
-            DB = JSON.parse(ev.target.result);
-            save();
-            alert("✨ ¡Datos recuperados con éxito!");
-            location.reload();
-        } catch(err) { alert("Archivo no válido"); }
-    };
-    reader.readAsText(file);
+    reader.onload = (ev) => { DB = JSON.parse(ev.target.result); save(); location.reload(); };
+    reader.readAsText(e.target.files[0]);
 }
 
 function resetData() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
 
 // INIT
-load(); mostrarFrase(); renderEntrenamiento();
+load();
+document.getElementById('frase-container').innerText = "¡A darle con todo!";
+renderEntrenamiento();
 </script>
 </body>
 </html>
