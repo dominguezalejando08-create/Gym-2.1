@@ -16,6 +16,9 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); width: 100vw; overflow-x: hidden; padding-bottom: 110px; }
         
+        /* PANTALLA DE BLOQUEO */
+        #bloqueo-pestaña { position: fixed; inset: 0; background: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        
         #pantalla-inicio { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
         header { padding: 30px 20px; text-align: center; background: var(--gradient); color: white; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; position: relative; }
         #socio-display { position: absolute; top: 12px; left: 20px; font-size: 0.7rem; font-weight: 800; background: rgba(0,0,0,0.25); padding: 5px 12px; border-radius: 20px; }
@@ -45,11 +48,16 @@
         input, select, textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; font-family: inherit; }
         .progress-container { background: rgba(0,0,0,0.05); border-radius: 15px; height: 12px; margin-bottom: 15px; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; transition: 0.6s; }
-        
         #frase-momento { font-style: italic; font-size: 0.85rem; color: rgba(255,255,255,0.9); text-align: center; margin-top: 12px; padding: 0 15px; line-height: 1.3; font-weight: 300; }
     </style>
 </head>
 <body>
+
+<div id="bloqueo-pestaña">
+    <h2 style="color:var(--primary)">¡Sesión Activa!</h2>
+    <p>Ya tienes MONIS FIT abierto en otra pestaña.</p>
+    <button class="btn btn-main" onclick="window.close()">Regresar a la pestaña activa</button>
+</div>
 
 <div id="pantalla-inicio">
     <h1 style="color:#4a1e4a;">MONIS FIT</h1>
@@ -101,46 +109,41 @@
 
 <script>
 // --- CONTROL DE PESTAÑA ÚNICA ---
-const bc = new BroadcastChannel('monis_fit_channel');
-bc.postMessage('check_active');
+const bc = new BroadcastChannel('monis_fit_global');
+let isMain = true;
+
+bc.postMessage({type: 'NEW_TAB_OPENED'});
 bc.onmessage = (e) => {
-    if (e.data === 'check_active') bc.postMessage('is_active');
-    if (e.data === 'is_active') {
-        alert("¡Atención! MONIS FIT ya está abierto en otra pestaña. Por favor, usa la ventana activa para evitar pérdida de datos.");
-        window.location.href = "about:blank"; // Redirige para invalidar la pestaña duplicada
+    if (e.data.type === 'NEW_TAB_OPENED') {
+        bc.postMessage({type: 'ALREADY_ACTIVE'});
+    }
+    if (e.data.type === 'ALREADY_ACTIVE') {
+        isMain = false;
+        document.getElementById('bloqueo-pestaña').style.display = 'flex';
     }
 };
 
-// --- BASE DE DATOS Y CONFIGURACIÓN ---
+// --- BASE DE DATOS ---
+const STORAGE_KEY = 'MONIS_FIT_PRO_VFINAL';
 let DB = { tema: 'niña', socio: "", diaActual: 1, rutinas: {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}, dieta: {menuA:{},menuB:{}}, suplementos: [], evo: [] };
-const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Fuerte es quien no se rinde.", "Cada gota de sudor cuenta."];
+const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Cada gota de sudor cuenta."];
 
-// Usamos una llave genérica para detectar datos de versiones previas también
-const KEYS_TO_CHECK = ['MONOS_FIT_PRO_V4', 'MONIS_FIT_PRO_V5', 'MONIS_FIT_FINAL'];
-const CURRENT_KEY = 'MONIS_FIT_FINAL';
-
-function save() { localStorage.setItem(CURRENT_KEY, JSON.stringify(DB)); }
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
 
 function load() {
-    let data = null;
-    // Buscamos en todas las llaves posibles para no perder datos al cambiar nombres
-    for (let key of KEYS_TO_CHECK) {
-        data = localStorage.getItem(key);
-        if (data) break;
-    }
-
+    const data = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('MONIS_FIT_FINAL');
     if(data) {
         try {
             DB = JSON.parse(data);
             if(DB.socio) {
-                aplicarTema(DB.tema || 'niña');
+                aplicarTema(DB.tema);
                 document.getElementById('pantalla-inicio').style.display = 'none';
                 document.getElementById('edit-socio-num').value = DB.socio;
                 document.getElementById('selector-dia-manual').value = DB.diaActual;
                 document.getElementById('frase-momento').innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
                 renderTodo();
             }
-        } catch(e) { console.error("Error cargando DB"); }
+        } catch(e) { console.error("Error cargando datos"); }
     }
 }
 
@@ -224,28 +227,21 @@ function renderSuples() { document.getElementById('lista-suples').innerHTML = DB
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
 function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
-// --- IMPORTACIÓN CORREGIDA ---
+// --- IMPORTACIÓN FINAL CORREGIDA ---
 function importarData(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(ev) {
         try {
-            const importedContent = JSON.parse(ev.target.result);
-            // Validamos que sea un objeto de la app
-            if (importedContent.rutinas || importedContent.socio) {
-                // Sobrescribimos la DB actual con la importada
-                DB = Object.assign(DB, importedContent);
-                // Forzamos el guardado en LocalStorage
-                localStorage.setItem(CURRENT_KEY, JSON.stringify(DB));
-                alert("¡Datos cargados con éxito! La página se reiniciará para aplicar los cambios.");
-                setTimeout(() => { window.location.reload(); }, 300);
-            } else {
-                throw new Error("Formato inválido");
+            const temp = JSON.parse(ev.target.result);
+            if (temp.socio || temp.rutinas) {
+                DB = temp;
+                save();
+                alert("Importación exitosa. Cargando...");
+                window.location.reload();
             }
-        } catch(err) {
-            alert("Error: El archivo no es un respaldo válido de MONIS FIT.");
-        }
+        } catch(err) { alert("Archivo no válido"); }
     };
     reader.readAsText(file);
 }
@@ -253,12 +249,12 @@ function importarData(e) {
 function exportarData() {
     const blob = new Blob([JSON.stringify(DB)], {type:'application/json'});
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `backup_monis_fit_${DB.socio || 'pro'}.json`; a.click();
+    a.download = `backup_monis_fit.json`; a.click();
 }
 
 function actualizarSocio() { const n = document.getElementById('edit-socio-num').value.trim(); if(n) { DB.socio = n; save(); location.reload(); } }
-function eliminarTodo() { if(confirm("¿Borrar todo y empezar de cero?")) { localStorage.clear(); location.reload(); } }
-function eliminarTodasRutinas() { if(confirm("¿Borrar todo el plan de ejercicios?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
+function eliminarTodo() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+function eliminarTodasRutinas() { if(confirm("¿Borrar plan?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
 
 document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', () => {
