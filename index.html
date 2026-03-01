@@ -23,7 +23,6 @@
             width: 100vw; overflow-x: hidden; padding-bottom: 90px; transition: 0.3s;
         }
 
-        /* Pantalla de Inicio - Adaptable */
         #pantalla-inicio { 
             position: fixed; inset: 0; background: #fff; z-index: 9999; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
@@ -41,7 +40,6 @@
             background: rgba(0,0,0,0.25); padding: 5px 12px; border-radius: 20px; letter-spacing: 0.5px;
         }
 
-        /* Navegación Fija y Estética */
         nav { 
             display: flex; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
             position: fixed; bottom: 0; width: 100%; max-width: 100%; z-index: 1000; 
@@ -51,12 +49,15 @@
         nav button { 
             border: none; background: none; font-weight: 600; font-size: 0.6rem; 
             color: var(--text-light); cursor: pointer; display: flex; flex-direction: column; 
-            align-items: center; transition: 0.2s;
+            align-items: center; transition: 0.2s; padding: 8px; border-radius: 12px;
         }
         nav button span { font-size: 1.4rem; margin-bottom: 2px; }
-        nav button.active { color: var(--primary); transform: translateY(-2px); }
+        nav button.active { 
+            color: var(--primary); 
+            background: rgba(157, 78, 221, 0.1); 
+            box-shadow: inset 0 0 0 1px var(--primary);
+        }
 
-        /* Contenedores de Sección */
         section { 
             display: none; width: 100%; max-width: 500px; margin: 0 auto; 
             padding: 20px 15px; animation: fadeIn 0.3s ease-out; 
@@ -64,50 +65,25 @@
         section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tarjetas y UI */
-        .card { 
-            background: var(--card); border-radius: var(--radius); padding: 20px; 
-            margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); 
-        }
-        .ex-card { 
-            display: flex; align-items: center; gap: 12px; padding: 12px; 
-            background: var(--card); border-radius: 15px; margin-bottom: 10px; 
-            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
+        .card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .ex-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--card); border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
         .ex-img { width: 55px; height: 55px; border-radius: 12px; object-fit: cover; background: #f0f0f0; }
         
-        .btn { 
-            padding: 15px; border-radius: 15px; border: none; font-weight: 700; 
-            cursor: pointer; width: 100%; transition: 0.2s; font-size: 0.9rem; margin-top: 10px;
-        }
-        .btn:active { transform: scale(0.98); }
+        .btn { padding: 15px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; width: 100%; transition: 0.2s; font-size: 0.9rem; margin-top: 10px; }
         .btn-main { background: var(--primary); color: white; }
         .btn-danger { background: #ff4d6d; color: white; }
-        .btn-emoji { font-size: 2.5rem; background: none; border: none; cursor: pointer; margin: 10px 20px; transition: 0.3s; }
-        .btn-emoji:hover { transform: scale(1.2); }
+        .btn-emoji { font-size: 2.5rem; background: none; border: none; cursor: pointer; margin: 10px 20px; }
 
-        input, select, textarea { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); 
-            margin-bottom: 10px; font-family: inherit; font-size: 0.9rem; background: #fdfdfd;
-        }
-        
-        .grid-evo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .evo-data { font-size: 0.8rem; color: var(--text-light); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .diff { font-weight: 800; padding: 2px 8px; border-radius: 8px; font-size: 0.75rem; }
-        .sube { background: #ffe5e5; color: #ff4d4d; } 
-        .baja { background: #e5f9e5; color: #22c55e; }
-
+        input, select, textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; font-family: inherit; font-size: 0.9rem; }
         .progress-container { background: rgba(0,0,0,0.05); border-radius: 15px; height: 10px; margin-bottom: 25px; overflow: hidden; }
-        .progress-bar { background: var(--accent); height: 100%; transition: 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .progress-bar { background: var(--accent); height: 100%; transition: 0.6s; }
     </style>
 </head>
 <body>
 
 <div id="pantalla-inicio">
-    <h1 style="color:#4a1e4a; margin-bottom:5px;">MONOS FIT</h1>
-    <p style="color:#8e7d8e; margin-top:0;">Bienvenido de nuevo</p>
-    <input type="text" id="input-socio" placeholder="Ingresa N° Socio" style="max-width: 250px; text-align: center; border: 2px solid var(--primary);">
-    <p style="font-weight:600; margin-top:20px;">Selecciona tu perfil:</p>
+    <h1 style="color:#4a1e4a;">MONOS FIT</h1>
+    <input type="text" id="input-socio" placeholder="N° Socio" style="max-width: 250px; text-align: center;">
     <div style="display:flex;">
         <button class="btn-emoji" onclick="validarIngreso('niña')">🌸</button>
         <button class="btn-emoji" onclick="validarIngreso('niño')">⚡</button>
@@ -116,8 +92,10 @@
 
 <header>
     <div id="socio-display">Socio: ---</div>
-    <h1 id="titulo-header" style="margin:0; font-size: 1.5rem;">MI ENTRENAMIENTO</h1>
-    <div id="status-dia" style="font-weight:300; opacity:0.9;">Día 1</div>
+    <h1 id="titulo-header">MI ENTRENAMIENTO</h1>
+    <select id="selector-dia-manual" onchange="cambiarDiaManual(this.value)" style="width:auto; background:rgba(255,255,255,0.2); border:none; color:white; font-weight:bold; border-radius:10px; padding:2px 10px;">
+        <option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option><option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option><option value="7">Día 7</option>
+    </select>
 </header>
 
 <nav id="main-nav">
@@ -130,7 +108,7 @@
 </nav>
 
 <section id="entrenar" class="active">
-    <div class="progress-container"><div id="bar" class="progress-bar" style="width: 0%"></div></div>
+    <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
     <div id="listaEntrenamiento"></div>
 </section>
 
@@ -139,69 +117,20 @@
         <h3>➕ Nuevo Ejercicio</h3>
         <select id="r_dia"><option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option><option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option><option value="7">Día 7</option></select>
         <input id="r_nombre" placeholder="Nombre del Ejercicio">
-        <input id="r_series" placeholder="Series y Repeticiones (ej. 4x12)">
-        <input type="file" id="r_file" accept="image/*" style="font-size:0.8rem;">
-        <button class="btn btn-main" onclick="guardarEjercicio()">Guardar en Plan</button>
-        <button class="btn btn-danger" style="margin-top:20px; opacity:0.8;" onclick="eliminarTodasRutinas()">🗑️ Limpiar Plan Mensual</button>
+        <input id="r_series" placeholder="Series y Reps">
+        <input type="file" id="r_file" accept="image/*">
+        <button class="btn btn-main" onclick="guardarEjercicio()">Guardar</button>
+        <button class="btn btn-danger" style="opacity:0.7" onclick="eliminarTodasRutinas()">🗑️ Limpiar Todo el Plan</button>
     </div>
     <div id="visor-plan-detallado"></div>
 </section>
 
-<section id="dieta">
-    <div class="card">
-        <h3>🍴 Plan Alimenticio</h3>
-        <select id="d_menu_sel" onchange="cargarFormDieta()">
-            <option value="menuA">Menú A (Opción 1)</option>
-            <option value="menuB">Menú B (Opción 2)</option>
-        </select>
-        <textarea id="d_des" placeholder="Desayuno" rows="2"></textarea>
-        <textarea id="d_s1" placeholder="Snack 1" rows="2"></textarea>
-        <textarea id="d_com" placeholder="Comida" rows="2"></textarea>
-        <textarea id="d_s2" placeholder="Snack 2" rows="2"></textarea>
-        <textarea id="d_cen" placeholder="Cena" rows="2"></textarea>
-        <button class="btn btn-main" onclick="guardarDieta()">Actualizar Dieta</button>
-    </div>
-</section>
-
-<section id="suples">
-    <div class="card">
-        <h3>💊 Suplementación</h3>
-        <input id="s_nombre" placeholder="Nombre del Suplemento">
-        <input id="s_momento" placeholder="Instrucciones de toma">
-        <button class="btn btn-main" onclick="agregarSuplemento()">Añadir a la lista</button>
-    </div>
-    <div id="lista-suples"></div>
-</section>
-
-<section id="progreso">
-    <div class="card">
-        <h3>📉 Registro de Métricas</h3>
-        <div class="grid-evo">
-            <input type="number" id="e_peso" placeholder="Peso (kg)" step="0.1">
-            <input type="number" id="e_cintura" placeholder="Cintura (cm)">
-            <input type="number" id="e_cadera" placeholder="Cadera (cm)">
-            <input type="number" id="e_grasa" placeholder="% Grasa">
-            <input type="number" id="e_musculo" placeholder="% Músculo">
-        </div>
-        <button class="btn btn-main" onclick="registrarEvo()">Guardar y Comparar</button>
-    </div>
-    <div id="lista-evo"></div>
-</section>
-
-<section id="ajustes">
-    <div class="card" style="text-align:center;">
-        <h3>⚙️ Centro de Datos</h3>
-        <p style="font-size:0.8rem; color:var(--text-light);">Usa el backup para cambiar de celular sin perder nada.</p>
-        <button class="btn btn-main" onclick="exportarData()">📤 Generar Backup (.json)</button>
-        <button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
-        <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
-        <hr style="margin:20px 0; opacity:0.1;">
-        <button class="btn btn-danger" onclick="eliminarTodo()">⚠️ RESET TOTAL</button>
-    </div>
-</section>
+<section id="dieta"><div class="card"><h3>🍴 Dieta</h3><select id="d_menu_sel" onchange="cargarFormDieta()"><option value="menuA">Menú A</option><option value="menuB">Menú B</option></select><textarea id="d_des" placeholder="Desayuno"></textarea><textarea id="d_s1" placeholder="Snack 1"></textarea><textarea id="d_com" placeholder="Comida"></textarea><textarea id="d_s2" placeholder="Snack 2"></textarea><textarea id="d_cen" placeholder="Cena"></textarea><button class="btn btn-main" onclick="guardarDieta()">Guardar Dieta</button></div></section>
+<section id="suples"><div class="card"><h3>💊 Suplementos</h3><input id="s_nombre" placeholder="Nombre"><input id="s_momento" placeholder="Instrucciones"><button class="btn btn-main" onclick="agregarSuplemento()">Añadir</button></div><div id="lista-suples"></div></section>
+<section id="progreso"><div class="card"><h3>📉 Evolución</h3><div class="grid-evo"><input type="number" id="e_peso" placeholder="Peso"><input type="number" id="e_cintura" placeholder="Cintura"><input type="number" id="e_cadera" placeholder="Cadera"><input type="number" id="e_grasa" placeholder="%Grasa"><input type="number" id="e_musculo" placeholder="%Musculo"></div><button class="btn btn-main" onclick="registrarEvo()">Guardar</button></div><div id="lista-evo"></div></section>
+<section id="ajustes"><div class="card"><h3>👤 Perfil</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Socio</button></div><div class="card"><h3>⚙️ Datos</h3><button class="btn btn-main" onclick="exportarData()">📤 Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset</button></div></section>
 
 <script>
-// Base de datos con valores por defecto para evitar errores de importación
 let DB = { 
     tema: null, socio: "", diaActual: 1, 
     rutinas: { "1":[], "2":[], "3":[], "4":[], "5":[], "6":[], "7":[] }, 
@@ -209,28 +138,25 @@ let DB = {
     suplementos: [], evo: []
 };
 
-function save() { localStorage.setItem('MONOS_FIT_V2', JSON.stringify(DB)); }
+function save() { localStorage.setItem('MONOS_FIT_V3', JSON.stringify(DB)); }
 
 function load() {
-    const data = localStorage.getItem('MONOS_FIT_V2');
+    const data = localStorage.getItem('MONOS_FIT_V3');
     if(data) {
-        try {
-            const parsed = JSON.parse(data);
-            // Mezclamos con DB inicial para asegurar que no falten propiedades nuevas
-            DB = { ...DB, ...parsed };
-            if(DB.tema && DB.socio) {
-                aplicarTema(DB.tema);
-                document.getElementById('pantalla-inicio').style.display = 'none';
-            }
-        } catch(e) { console.error("Error cargando datos", e); }
+        DB = JSON.parse(data);
+        if(DB.tema && DB.socio) {
+            aplicarTema(DB.tema);
+            document.getElementById('pantalla-inicio').style.display = 'none';
+            document.getElementById('edit-socio-num').value = DB.socio;
+            document.getElementById('selector-dia-manual').value = DB.diaActual;
+        }
     }
 }
 
 function validarIngreso(t) {
     const s = document.getElementById('input-socio').value.trim();
-    if(!s) return alert("Por favor, ingresa tu número de socio.");
-    DB.socio = s;
-    DB.tema = t;
+    if(!s) return alert("Ingresa tu socio");
+    DB.socio = s; DB.tema = t;
     aplicarTema(t);
     document.getElementById('pantalla-inicio').style.display = 'none';
     save();
@@ -242,215 +168,103 @@ function aplicarTema(t) {
     renderTodo();
 }
 
-function renderTodo() {
-    renderEntrenamiento(); renderPlan(); renderSuples(); renderEvo(); renderDieta();
+function cambiarDiaManual(val) {
+    DB.diaActual = parseInt(val);
+    save(); renderEntrenamiento();
 }
 
-// --- RUTINAS ---
+function renderTodo() { renderEntrenamiento(); renderPlan(); renderSuples(); renderEvo(); cargarFormDieta(); }
+
+// --- LÓGICA DE ENTRENAMIENTO CON AVANCE AUTOMÁTICO ---
+function renderEntrenamiento() {
+    const cont = document.getElementById('listaEntrenamiento');
+    const ejercicios = DB.rutinas[DB.diaActual.toString()] || [];
+    let completados = 0;
+    cont.innerHTML = "";
+
+    ejercicios.forEach((ej, idx) => {
+        if(ej.done) completados++;
+        cont.innerHTML += `<div class="ex-card">
+            <img src="${ej.img || 'https://via.placeholder.com/60?text=FIT'}" class="ex-img">
+            <div style="flex:1"><b>${ej.nombre}</b><br><small>${ej.series}</small></div>
+            <input type="checkbox" style="width:28px; height:28px;" ${ej.done?'checked':''} 
+                onchange="marcarEjercicio(${idx})">
+        </div>`;
+    });
+
+    const p = ejercicios.length ? (completados / ejercicios.length) * 100 : 0;
+    document.getElementById('bar').style.width = p + "%";
+
+    // AVANCE AUTOMÁTICO
+    if(p === 100 && ejercicios.length > 0) {
+        setTimeout(() => {
+            let sig = DB.diaActual + 1;
+            // Si existe el siguiente día con información
+            if(DB.rutinas[sig] && DB.rutinas[sig].length > 0) {
+                alert(`¡Día ${DB.diaActual} completado! Pasando al Día ${sig}`);
+                DB.diaActual = sig;
+                document.getElementById('selector-dia-manual').value = sig;
+                save(); renderEntrenamiento();
+            } else {
+                // Si no hay más información, se reinicia la semana
+                alert("¡Semana completada! Reiniciando y quitando palomitas.");
+                reiniciarSemana();
+            }
+        }, 500);
+    }
+}
+
+function marcarEjercicio(idx) {
+    DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done;
+    save(); renderEntrenamiento();
+}
+
+function reiniciarSemana() {
+    DB.diaActual = 1;
+    document.getElementById('selector-dia-manual').value = 1;
+    // Quitar todas las palomitas
+    for(let d in DB.rutinas) {
+        DB.rutinas[d].forEach(ej => ej.done = false);
+    }
+    save(); renderTodo();
+}
+
+// --- RESTO DE FUNCIONES IGUALES ---
 function guardarEjercicio() {
     const dia = document.getElementById('r_dia').value;
     const nombre = document.getElementById('r_nombre').value.trim();
     const series = document.getElementById('r_series').value.trim();
     const file = document.getElementById('r_file').files[0];
-    
-    if(!nombre) return alert("Escribe el nombre del ejercicio");
-
-    const addEj = (imgData = "") => {
-        DB.rutinas[dia].push({ nombre, series, img: imgData, done: false });
-        save(); renderTodo();
-        document.getElementById('r_nombre').value = "";
-        document.getElementById('r_series').value = "";
-        document.getElementById('r_file').value = "";
-    };
-
-    if(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => addEj(e.target.result);
-        reader.readAsDataURL(file);
-    } else { addEj(); }
+    if(!nombre) return;
+    const add = (img = "") => { DB.rutinas[dia].push({ nombre, series, img, done: false }); save(); renderTodo(); };
+    if(file) { const r = new FileReader(); r.onload = (e) => add(e.target.result); r.readAsDataURL(file); } else add();
 }
-
-function eliminarTodasRutinas() {
-    if(confirm("¿Seguro? Se borrarán todos los ejercicios de todos los días.")) {
-        DB.rutinas = { "1":[], "2":[], "3":[], "4":[], "5":[], "6":[], "7":[] };
-        save(); renderTodo();
-    }
-}
-
+function eliminarTodasRutinas() { if(confirm("¿Borrar todo el plan?")) { DB.rutinas = { "1":[], "2":[], "3":[], "4":[], "5":[], "6":[], "7":[] }; save(); renderTodo(); } }
 function renderPlan() {
-    const cont = document.getElementById('visor-plan-detallado');
-    cont.innerHTML = "<h4 style='margin-left:10px;'>Lista del Mes</h4>";
-    for(let d in DB.rutinas) {
-        if(DB.rutinas[d].length > 0) {
-            let html = `<div class='card'><b>DÍA ${d}</b><div style='margin-top:10px;'>`;
-            DB.rutinas[d].forEach((ej, idx) => {
-                html += `<div style='display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; border-bottom:1px solid #eee; padding-bottom:5px;'>
-                    <span>${ej.nombre}</span>
-                    <span style='color:red; cursor:pointer;' onclick='DB.rutinas[${d}].splice(${idx},1);save();renderTodo();'>✕</span>
-                </div>`;
-            });
-            html += `</div></div>`;
-            cont.innerHTML += html;
-        }
-    }
+    const cont = document.getElementById('visor-plan-detallado'); cont.innerHTML = "";
+    for(let d in DB.rutinas) { if(DB.rutinas[d].length > 0) {
+        let h = `<div class='card'><b>DÍA ${d}</b><div style='margin-top:10px;'>`;
+        DB.rutinas[d].forEach((ej, i) => { h += `<div style='display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;'><span>${ej.nombre}</span><span style='color:red' onclick='DB.rutinas[${d}].splice(${i},1);save();renderTodo();'>✕</span></div>`; });
+        cont.innerHTML += h + `</div></div>`;
+    }}
 }
+function guardarDieta() { const s = document.getElementById('d_menu_sel').value; DB.dieta[s] = { desayuno: document.getElementById('d_des').value, snack1: document.getElementById('d_s1').value, comida: document.getElementById('d_com').value, snack2: document.getElementById('d_s2').value, cena: document.getElementById('d_cen').value }; save(); alert("Guardado"); }
+function cargarFormDieta() { const m = DB.dieta[document.getElementById('d_menu_sel').value] || {}; document.getElementById('d_des').value = m.desayuno || ""; document.getElementById('d_s1').value = m.snack1 || ""; document.getElementById('d_com').value = m.comida || ""; document.getElementById('d_s2').value = m.snack2 || ""; document.getElementById('d_cen').value = m.cena || ""; }
+function agregarSuplemento() { const n = document.getElementById('s_nombre').value; if(n) { DB.suplementos.push({ nombre: n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); } }
+function renderSuples() { document.getElementById('lista-suples').innerHTML = DB.suplementos.map((s, i) => `<div class="ex-card"><div style="flex:1"><b>${s.nombre}</b><br><small>${s.momento}</small></div><button style="border:none; background:none; color:red;" onclick="DB.suplementos.splice(${i},1);save();renderSuples();">🗑️</button></div>`).join(''); }
+function registrarEvo() { const val = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short'}), peso: val('e_peso'), cintura: val('e_cintura'), cadera: val('e_cadera'), grasa: val('e_grasa'), musculo: val('e_musculo') }); save(); renderEvo(); }
+function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map((e, i) => `<div class="card"><div style="display:flex; justify-content:space-between"><b>${e.fecha}</b></div><div class="evo-data"><span>Peso: ${e.peso}kg</span><span>Cint: ${e.cintura}cm</span></div></div>`).join(''); }
+function exportarData() { const blob = new Blob([JSON.stringify(DB)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `backup_${DB.socio}.json`; a.click(); }
+function importarData(e) { const r = new FileReader(); r.onload = (ev) => { try { const t = JSON.parse(ev.target.result); if(t.socio) { DB = t; save(); location.reload(); } } catch(err) { alert("Error"); } }; r.readAsText(e.target.files[0]); }
+function eliminarTodo() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+function actualizarSocio() { const n = document.getElementById('edit-socio-num').value.trim(); if(n) { DB.socio = n; save(); location.reload(); } }
 
-// --- DIETA (FIXED) ---
-function cargarFormDieta() {
-    const sel = document.getElementById('d_menu_sel').value;
-    const m = DB.dieta[sel] || {};
-    document.getElementById('d_des').value = m.desayuno || "";
-    document.getElementById('d_s1').value = m.snack1 || "";
-    document.getElementById('d_com').value = m.comida || "";
-    document.getElementById('d_s2').value = m.snack2 || "";
-    document.getElementById('d_cen').value = m.cena || "";
-}
-
-function guardarDieta() {
-    const sel = document.getElementById('d_menu_sel').value;
-    DB.dieta[sel] = {
-        desayuno: document.getElementById('d_des').value,
-        snack1: document.getElementById('d_s1').value,
-        comida: document.getElementById('d_com').value,
-        snack2: document.getElementById('d_s2').value,
-        cena: document.getElementById('d_cen').value
-    };
-    save(); alert("Dieta actualizada correctamente ✅");
-}
-
-function renderDieta() { cargarFormDieta(); }
-
-// --- SUPLES ---
-function agregarSuplemento() {
-    const n = document.getElementById('s_nombre').value.trim();
-    const m = document.getElementById('s_momento').value.trim();
-    if(n) {
-        DB.suplementos.push({ nombre: n, momento: m });
-        save(); renderSuples();
-        document.getElementById('s_nombre').value = "";
-        document.getElementById('s_momento').value = "";
-    }
-}
-
-function renderSuples() {
-    document.getElementById('lista-suples').innerHTML = DB.suplementos.map((s, i) => `
-    <div class="ex-card">
-        <div style="flex:1"><b>${s.nombre}</b><br><small>${s.momento}</small></div>
-        <button style="border:none; background:none; color:red; font-size:1.2rem;" onclick="DB.suplementos.splice(${i},1);save();renderSuples();">🗑️</button>
-    </div>`).join('');
-}
-
-// --- EVOLUCIÓN ---
-function registrarEvo() {
-    const val = (id) => parseFloat(document.getElementById(id).value) || 0;
-    const entry = {
-        fecha: new Date().toLocaleDateString('es-MX', {day:'2-digit', month:'short'}),
-        peso: val('e_peso'),
-        cintura: val('e_cintura'),
-        cadera: val('e_cadera'),
-        grasa: val('e_grasa'),
-        musculo: val('e_musculo')
-    };
-    if(entry.peso === 0) return alert("Ingresa al menos el peso");
-    DB.evo.unshift(entry);
-    save(); renderEvo();
-    // Limpiar inputs
-    ['e_peso','e_cintura','e_cadera','e_grasa','e_musculo'].forEach(i => document.getElementById(i).value = "");
-}
-
-function renderEvo() {
-    const cont = document.getElementById('lista-evo');
-    cont.innerHTML = DB.evo.map((e, i) => {
-        let comp = "";
-        const sig = DB.evo[i + 1];
-        if(sig) {
-            const dif = (e.peso - sig.peso).toFixed(1);
-            comp = `<span class="diff ${dif > 0 ? 'sube' : 'baja'}">${dif > 0 ? '▲' : ''}${dif} kg</span>`;
-        }
-        return `<div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <b style="color:var(--primary)">${e.fecha}</b> ${comp}
-            </div>
-            <div class="evo-data">
-                <span>Peso: <b>${e.peso}kg</b></span> <span>Cint: ${e.cintura}cm</span>
-                <span>Grasa: ${e.grasa}%</span> <span>Musc: ${e.musculo}%</span>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-// --- HOY ---
-function renderEntrenamiento() {
-    const cont = document.getElementById('listaEntrenamiento');
-    const ejercicios = DB.rutinas[DB.diaActual.toString()] || [];
-    let completados = 0;
-    
-    cont.innerHTML = `<h2 style="margin-top:0;">Día ${DB.diaActual}</h2>`;
-    
-    if(ejercicios.length === 0) {
-        cont.innerHTML += `<p style="text-align:center; opacity:0.5; margin-top:40px;">No hay ejercicios para hoy.<br>Agrégalos en la pestaña PLAN.</p>`;
-    }
-
-    ejercicios.forEach((ej, idx) => {
-        if(ej.done) completados++;
-        cont.innerHTML += `<div class="ex-card" style="${ej.done ? 'opacity:0.6; background:#f9f9f9;' : ''}">
-            <img src="${ej.img || 'https://via.placeholder.com/60?text=FIT'}" class="ex-img">
-            <div style="flex:1"><b>${ej.nombre}</b><br><small>${ej.series}</small></div>
-            <input type="checkbox" style="width:28px; height:28px; accent-color:var(--primary);" ${ej.done?'checked':''} 
-                onchange="DB.rutinas[${DB.diaActual}][${idx}].done=!DB.rutinas[${DB.diaActual}][${idx}].done;save();renderEntrenamiento();">
-        </div>`;
-    });
-    
-    const p = ejercicios.length ? (completados / ejercicios.length) * 100 : 0;
-    document.getElementById('bar').style.width = p + "%";
-    document.getElementById('status-dia').innerText = `Progreso: ${Math.round(p)}%`;
-}
-
-// --- GEAR & BACKUP ---
-function exportarData() {
-    const blob = new Blob([JSON.stringify(DB)], {type:'application/json'});
-    const a = document.createElement('a'); 
-    a.href = URL.createObjectURL(blob);
-    a.download = `monosfit_backup_${DB.socio}.json`; 
-    a.click();
-}
-
-function importarData(e) {
-    const r = new FileReader();
-    r.onload = (ev) => { 
-        try {
-            const tempDB = JSON.parse(ev.target.result);
-            // Aseguramos que el socio y el tema existan para no romper el inicio
-            if(tempDB.socio && tempDB.tema) {
-                DB = tempDB;
-                save();
-                alert("Importación exitosa. Reiniciando...");
-                location.reload(); 
-            } else {
-                alert("Archivo de backup no válido.");
-            }
-        } catch(err) {
-            alert("Error al leer el archivo.");
-        }
-    };
-    r.readAsText(e.target.files[0]);
-}
-
-function eliminarTodo() {
-    if(confirm("¡ATENCIÓN! Se borrarán todos los datos, incluyendo socio y progresos. ¿Continuar?")) {
-        localStorage.clear();
-        location.reload();
-    }
-}
-
-// Navegación
 document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.section).classList.add('active');
-        window.scrollTo(0,0);
     });
 });
 
