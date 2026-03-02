@@ -231,7 +231,6 @@ function renderPlan() {
     visor.innerHTML = html || "<p style='text-align:center; color:var(--text-light)'>No hay ejercicios en el plan.</p>";
 }
 
-// FUNCIONES DE ACCIÓN CORREGIDAS
 function guardarEjercicio() {
     const d = document.getElementById('r_dia').value;
     const n = document.getElementById('r_nombre').value.trim();
@@ -245,7 +244,6 @@ function guardarEjercicio() {
         DB.rutinas[d].push({ nombre: n, series: s, img: imgData, done: false });
         save();
         renderTodo();
-        // Limpiar campos
         document.getElementById('r_nombre').value = "";
         document.getElementById('r_series').value = "";
         document.getElementById('r_file').value = "";
@@ -268,8 +266,32 @@ function eliminarEjercicio(dia, idx) {
 }
 
 function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
-function guardarDieta() { const s = document.getElementById('d_menu_sel').value; DB.dieta[s] = { desayuno: document.getElementById('d_des').value, snack1: document.getElementById('d_s1').value, comida: document.getElementById('d_com').value, snack2: document.getElementById('d_s2').value, cena: document.getElementById('d_cen').value }; save(); alert("Dieta guardada"); }
-function cargarFormDieta() { const m = DB.dieta[document.getElementById('d_menu_sel').value] || {}; document.getElementById('d_des').value = m.desayuno || ""; document.getElementById('d_s1').value = m.snack1 || ""; document.getElementById('d_com').value = m.comida || ""; document.getElementById('d_s2').value = m.snack2 || ""; document.getElementById('d_cen').value = m.cena || ""; }
+
+function guardarDieta() { 
+    const s = document.getElementById('d_menu_sel').value; 
+    if(!DB.dieta) DB.dieta = {menuA:{}, menuB:{}};
+    DB.dieta[s] = { 
+        desayuno: document.getElementById('d_des').value, 
+        snack1: document.getElementById('d_s1').value, 
+        comida: document.getElementById('d_com').value, 
+        snack2: document.getElementById('d_s2').value, 
+        cena: document.getElementById('d_cen').value 
+    }; 
+    save(); 
+    alert("Dieta guardada"); 
+}
+
+function cargarFormDieta() { 
+    const menuSel = document.getElementById('d_menu_sel').value;
+    if(!DB.dieta) DB.dieta = {menuA:{}, menuB:{}};
+    const m = DB.dieta[menuSel] || {}; 
+    document.getElementById('d_des').value = m.desayuno || ""; 
+    document.getElementById('d_s1').value = m.snack1 || ""; 
+    document.getElementById('d_com').value = m.comida || ""; 
+    document.getElementById('d_s2').value = m.snack2 || ""; 
+    document.getElementById('d_cen').value = m.cena || ""; 
+}
+
 function agregarSuplemento() { const n = document.getElementById('s_nombre').value; if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); document.getElementById('s_nombre').value = ""; document.getElementById('s_momento').value = ""; } }
 function renderSuples() { document.getElementById('lista-suples').innerHTML = DB.suplementos.map((s, i) => `<div class="ex-card"><div style="flex:1"><b>${s.nombre}</b><br><small>${s.momento}</small></div><button style="border:none; background:none; color:red;" onclick="DB.suplementos.splice(${i},1);save();renderSuples();">🗑️</button></div>`).join(''); }
 function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
