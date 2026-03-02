@@ -105,7 +105,22 @@
 
 <section id="dieta"><div class="card"><h3>🍴 Dieta</h3><select id="d_menu_sel" onchange="cargarFormDieta()"><option value="menuA">Menú A</option><option value="menuB">Menú B</option></select><textarea id="d_des" placeholder="Desayuno" rows="3"></textarea><textarea id="d_s1" placeholder="Snack 1" rows="3"></textarea><textarea id="d_com" placeholder="Comida" rows="3"></textarea><textarea id="d_s2" placeholder="Snack 2" rows="3"></textarea><textarea id="d_cen" placeholder="Cena" rows="3"></textarea><button class="btn btn-main" onclick="guardarDieta()">Guardar Dieta</button></div></section>
 <section id="suples"><div class="card"><h3>💊 Suplementación</h3><input id="s_nombre" placeholder="Nombre"><input id="s_momento" placeholder="Instrucciones"><button class="btn btn-main" onclick="agregarSuplemento()">Añadir Suple</button></div><div id="lista-suples"></div></section>
-<section id="progreso"><div class="card"><h3>📉 Evolución</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><input type="number" id="e_peso" placeholder="Peso"><input type="number" id="e_cintura" placeholder="Cintura"><input type="number" id="e_cadera" placeholder="Cadera"><input type="number" id="e_grasa" placeholder="% Grasa"><input type="number" id="e_musculo" placeholder="% Músculo"></div><button class="btn btn-main" onclick="registrarEvo()">Guardar Métricas</button></div><div id="lista-evo"></div></section>
+
+<section id="progreso">
+    <div class="card">
+        <h3>📉 Evolución</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <input type="number" id="e_peso" placeholder="Peso (kg)" step="0.1">
+            <input type="number" id="e_cintura" placeholder="Cintura (cm)" step="0.1">
+            <input type="number" id="e_cadera" placeholder="Cadera (cm)" step="0.1">
+            <input type="number" id="e_grasa" placeholder="% Grasa" step="0.1">
+            <input type="number" id="e_musculo" placeholder="% Músculo" step="0.1">
+        </div>
+        <button class="btn btn-main" onclick="registrarEvo()">Guardar Métricas</button>
+    </div>
+    <div id="lista-evo"></div>
+</section>
+
 <section id="ajustes"><div class="card"><h3>👤 Socio</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button></div><div class="card"><h3>⚙️ Sistema</h3><button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button></div></section>
 
 <script>
@@ -121,7 +136,8 @@ let DB = { tema: 'niña', socio: "", diaActual: 1, rutinas: {"1":[],"2":[],"3":[
 const frases = ["El éxito es la suma de pequeños esfuerzos.", "Tu cuerpo escucha lo que tu mente dice.", "No te detengas hasta estar orgulloso.", "La disciplina es la clave.", "Cada gota de sudor cuenta.", "Fuerte es quien no se rinde.", "Hoy es un gran día para entrenar.", "Tu única competencia eres tú mismo."];
 
 function actualizarFrase() {
-    document.getElementById('frase-momento').innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
+    const f = document.getElementById('frase-momento');
+    if(f) f.innerText = `"${frases[Math.floor(Math.random()*frases.length)]}"`;
 }
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
@@ -130,7 +146,8 @@ function load() {
     const data = localStorage.getItem(STORAGE_KEY);
     if(data) {
         try {
-            DB = JSON.parse(data);
+            const temp = JSON.parse(data);
+            DB = Object.assign({}, DB, temp);
             if(DB.socio) {
                 aplicarTema(DB.tema || 'niña');
                 document.getElementById('pantalla-inicio').style.display = 'none';
@@ -148,13 +165,13 @@ function validarIngreso(t) {
     if(!s) return alert("Ingresa tu socio");
     DB.socio = s; DB.tema = t; aplicarTema(t);
     document.getElementById('pantalla-inicio').style.display = 'none';
-    save();
-    renderTodo();
+    save(); renderTodo();
 }
 
 function aplicarTema(t) {
     document.body.className = 'tema-' + t;
-    document.getElementById('socio-display').innerText = "SOCIO: " + DB.socio;
+    const sd = document.getElementById('socio-display');
+    if(sd) sd.innerText = "SOCIO: " + DB.socio;
 }
 
 function renderTodo() { 
@@ -170,45 +187,65 @@ function renderEntrenamiento() {
     if(!cont) return;
     const ejercicios = DB.rutinas[DB.diaActual.toString()] || [];
     let completados = 0;
-    
     let html = "";
+    
     ejercicios.forEach((ej, idx) => {
         if(ej.done) completados++;
         html += `<div class="ex-card">
-            <img src="${ej.img || 'https://via.placeholder.com/60?text=FIT'}" class="ex-img" loading="lazy">
+            <img src="${ej.img || 'https://via.placeholder.com/60?text=FIT'}" class="ex-img">
             <div style="flex:1"><b>${ej.nombre}</b><br><small>${ej.series}</small></div>
             <input type="checkbox" style="width:30px; height:30px;" ${ej.done?'checked':''} onchange="marcarEjercicio(${idx})">
         </div>`;
     });
-    cont.innerHTML = html;
-
+    
+    cont.innerHTML = html || "<p style='text-align:center; opacity:0.5; padding:20px;'>No hay ejercicios para hoy.</p>";
+    
     const p = ejercicios.length ? (completados / ejercicios.length) * 100 : 0;
     const bar = document.getElementById('bar');
     if(bar) bar.style.width = p + "%";
 
+    // --- LÓGICA DE AVANCE Y RESET AUTOMÁTICO ---
     if(p === 100 && ejercicios.length > 0) {
         setTimeout(() => {
             let sig = DB.diaActual + 1;
             let encontrado = false;
+            
+            // Buscar si hay más días con ejercicios
             for(let i = sig; i <= 7; i++){
                 if(DB.rutinas[i.toString()] && DB.rutinas[i.toString()].length > 0){
                     DB.diaActual = i; 
                     document.getElementById('selector-dia-manual').value = i;
                     encontrado = true;
-                    alert("¡Pasando al Día " + i);
+                    alert("¡Día terminado! Pasando al Día " + i);
                     break;
                 }
             }
-            if(!encontrado) { alert("¡Semana terminada!"); reiniciarSemana(); }
-            save(); renderTodo();
-        }, 300);
+
+            // Si no encontró más días, resetear todo al Día 1
+            if(!encontrado) { 
+                alert("¡Felicidades! Has terminado todos los días del plan."); 
+                
+                // 1. Regresar al Día 1
+                DB.diaActual = 1;
+                document.getElementById('selector-dia-manual').value = 1;
+                
+                // 2. Quitar todas las palomitas de todos los días
+                for(let d = 1; d <= 7; d++) {
+                    if(DB.rutinas[d.toString()]) {
+                        DB.rutinas[d.toString()].forEach(ex => ex.done = false);
+                    }
+                }
+            }
+            
+            save(); 
+            renderTodo();
+        }, 400);
     }
 }
 
 function marcarEjercicio(idx) { 
-    DB.rutinas[DB.diaActual][idx].done = !DB.rutinas[DB.diaActual][idx].done; 
-    save(); 
-    renderEntrenamiento(); 
+    DB.rutinas[DB.diaActual.toString()][idx].done = !DB.rutinas[DB.diaActual.toString()][idx].done; 
+    save(); renderEntrenamiento(); 
 }
 
 function renderPlan() {
@@ -216,19 +253,18 @@ function renderPlan() {
     if(!visor) return;
     let html = ""; 
     for(let d = 1; d <= 7; d++) { 
-        let diaStr = d.toString();
-        if(DB.rutinas[diaStr] && DB.rutinas[diaStr].length > 0) {
+        if(DB.rutinas[d.toString()] && DB.rutinas[d.toString()].length > 0) {
             html += `<div class='card'><b>DÍA ${d}</b><br>`;
-            DB.rutinas[diaStr].forEach((e, i) => {
+            DB.rutinas[d.toString()].forEach((e, i) => {
                 html += `<div style='display:flex; justify-content:space-between; align-items:center; margin:8px 0; border-bottom:1px solid #eee; padding-bottom:5px;'>
                         <span>${e.nombre} <small>(${e.series})</small></span>
-                        <span style='color:red; cursor:pointer; font-weight:bold; padding:5px;' onclick='eliminarEjercicio(${d}, ${i})'>✕</span>
+                        <span style='color:red; font-weight:bold; cursor:pointer; padding:5px;' onclick='eliminarEjercicio(${d}, ${i})'>✕</span>
                       </div>`;
             });
             html += `</div>`;
         }
     } 
-    visor.innerHTML = html || "<p style='text-align:center; color:var(--text-light)'>No hay ejercicios en el plan.</p>";
+    visor.innerHTML = html || "<p style='text-align:center; opacity:0.5;'>Plan vacío.</p>";
 }
 
 function guardarEjercicio() {
@@ -236,40 +272,26 @@ function guardarEjercicio() {
     const n = document.getElementById('r_nombre').value.trim();
     const s = document.getElementById('r_series').value.trim();
     const f = document.getElementById('r_file').files[0];
-
-    if(!n) { alert("Por favor ponle nombre al ejercicio"); return; }
-
+    if(!n) return alert("Pon nombre");
     const add = (imgData = "") => {
         if(!DB.rutinas[d]) DB.rutinas[d] = [];
         DB.rutinas[d].push({ nombre: n, series: s, img: imgData, done: false });
-        save();
-        renderTodo();
-        document.getElementById('r_nombre').value = "";
-        document.getElementById('r_series').value = "";
-        document.getElementById('r_file').value = "";
-        alert("¡Ejercicio guardado en el Día " + d + "!");
+        save(); renderTodo();
+        document.getElementById('r_nombre').value = ""; document.getElementById('r_series').value = "";
+        alert("Ejercicio añadido al Día " + d);
     };
-
     if(f) {
         const reader = new FileReader();
         reader.onload = (e) => add(e.target.result);
         reader.readAsDataURL(f);
-    } else {
-        add();
-    }
+    } else { add(); }
 }
 
-function eliminarEjercicio(dia, idx) {
-    DB.rutinas[dia.toString()].splice(idx, 1);
-    save();
-    renderTodo();
-}
-
+function eliminarEjercicio(dia, idx) { DB.rutinas[dia.toString()].splice(idx, 1); save(); renderTodo(); }
 function cambiarDiaManual(v) { DB.diaActual = parseInt(v); save(); renderEntrenamiento(); }
 
 function guardarDieta() { 
     const s = document.getElementById('d_menu_sel').value; 
-    if(!DB.dieta) DB.dieta = {menuA:{}, menuB:{}};
     DB.dieta[s] = { 
         desayuno: document.getElementById('d_des').value, 
         snack1: document.getElementById('d_s1').value, 
@@ -277,13 +299,11 @@ function guardarDieta() {
         snack2: document.getElementById('d_s2').value, 
         cena: document.getElementById('d_cen').value 
     }; 
-    save(); 
-    alert("Dieta guardada"); 
+    save(); alert("Dieta guardada"); 
 }
 
 function cargarFormDieta() { 
     const menuSel = document.getElementById('d_menu_sel').value;
-    if(!DB.dieta) DB.dieta = {menuA:{}, menuB:{}};
     const m = DB.dieta[menuSel] || {}; 
     document.getElementById('d_des').value = m.desayuno || ""; 
     document.getElementById('d_s1').value = m.snack1 || ""; 
@@ -292,24 +312,43 @@ function cargarFormDieta() {
     document.getElementById('d_cen').value = m.cena || ""; 
 }
 
-function agregarSuplemento() { const n = document.getElementById('s_nombre').value; if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); document.getElementById('s_nombre').value = ""; document.getElementById('s_momento').value = ""; } }
+function agregarSuplemento() { 
+    const n = document.getElementById('s_nombre').value; 
+    if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); document.getElementById('s_nombre').value = ""; } 
+}
 function renderSuples() { document.getElementById('lista-suples').innerHTML = DB.suplementos.map((s, i) => `<div class="ex-card"><div style="flex:1"><b>${s.nombre}</b><br><small>${s.momento}</small></div><button style="border:none; background:none; color:red;" onclick="DB.suplementos.splice(${i},1);save();renderSuples();">🗑️</button></div>`).join(''); }
-function registrarEvo() { const v = (id) => parseFloat(document.getElementById(id).value) || 0; DB.evo.unshift({ fecha: new Date().toLocaleDateString(), peso:v('e_peso'), cintura:v('e_cintura') }); save(); renderEvo(); }
-function renderEvo() { document.getElementById('lista-evo').innerHTML = DB.evo.map(e => `<div class="card"><b>${e.fecha}</b><br><small>Peso: ${e.peso}kg | Cint: ${e.cintura}cm</small></div>`).join(''); }
 
-function importarData(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-        try {
-            const temp = JSON.parse(ev.target.result);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(temp));
-            alert("Importación exitosa.");
-            location.reload();
-        } catch(err) { alert("Error"); }
-    };
-    reader.readAsText(file);
+function registrarEvo() {
+    const p = document.getElementById('e_peso').value || "0";
+    const ci = document.getElementById('e_cintura').value || "0";
+    const ca = document.getElementById('e_cadera').value || "0";
+    const g = document.getElementById('e_grasa').value || "0";
+    const m = document.getElementById('e_musculo').value || "0";
+    const nuevaEntrada = { fecha: new Date().toLocaleDateString(), peso: p, cintura: ci, cadera: ca, grasa: g, musculo: m };
+    if (!Array.isArray(DB.evo)) DB.evo = [];
+    DB.evo.unshift(nuevaEntrada);
+    save(); renderEvo();
+    ['e_peso', 'e_cintura', 'e_cadera', 'e_grasa', 'e_musculo'].forEach(id => document.getElementById(id).value = "");
+    alert("¡Métricas guardadas!");
+}
+
+function renderEvo() {
+    const contenedor = document.getElementById('lista-evo');
+    if (!contenedor) return;
+    if (!DB.evo || DB.evo.length === 0) { contenedor.innerHTML = "<p style='text-align:center; opacity:0.5; padding:20px;'>Aún no tienes registros.</p>"; return; }
+    contenedor.innerHTML = DB.evo.map((e, i) => `
+        <div class="card" style="position:relative; border-left: 5px solid var(--primary);">
+            <button onclick="if(confirm('¿Borrar?')){DB.evo.splice(${i},1);save();renderEvo();}" style="position:absolute; top:10px; right:10px; border:none; background:none; color:red; font-weight:bold;">✕</button>
+            <div style="font-size:0.9rem; font-weight:bold; color:var(--primary); margin-bottom:10px;">📅 ${e.fecha}</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.85rem;">
+                <div>⚖️ Peso: <b>${e.peso} kg</b></div>
+                <div>📏 Cint: <b>${e.cintura} cm</b></div>
+                <div>🍑 Cade: <b>${e.cadera} cm</b></div>
+                <div>🔥 Gras: <b>${e.grasa} %</b></div>
+                <div>💪 Musc: <b>${e.musculo} %</b></div>
+            </div>
+        </div>
+    `).join('');
 }
 
 function exportarData() {
@@ -317,15 +356,17 @@ function exportarData() {
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = `backup_monos_fit.json`; a.click();
 }
-
-function reiniciarSemana() {
-    DB.diaActual = 1; document.getElementById('selector-dia-manual').value = 1;
-    for(let d in DB.rutinas) DB.rutinas[d].forEach(e => e.done = false);
-    save(); renderTodo();
+function importarData(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try { localStorage.setItem(STORAGE_KEY, ev.target.result); location.reload(); } catch(err) { alert("Error"); }
+    };
+    reader.readAsText(file);
 }
-
 function actualizarSocio() { const n = document.getElementById('edit-socio-num').value.trim(); if(n) { DB.socio = n; save(); location.reload(); } }
-function eliminarTodo() { if(confirm("¿Borrar todo?")) { localStorage.clear(); location.reload(); } }
+function eliminarTodo() { if(confirm("¿Borrar TODO?")) { localStorage.clear(); location.reload(); } }
 function eliminarTodasRutinas() { if(confirm("¿Borrar plan?")) { DB.rutinas = {"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[]}; save(); renderTodo(); } }
 
 document.querySelectorAll('nav button').forEach(btn => {
