@@ -59,7 +59,7 @@
 
 <div id="pantalla-inicio">
     <h1 style="color:#4a1e4a;">MONOS FIT</h1>
-    <input type="text" id="input-socio" placeholder="N° Socio" style="max-width: 250px; text-align: center;">
+    <input type="text" id="input-socio" placeholder="🆔 N° Socio" style="max-width: 250px; text-align: center;">
     <div style="display:flex;"><button onclick="validarIngreso('niña')" style="font-size:3.5rem; background:none; border:none; cursor:pointer;">🌸</button>
     <button onclick="validarIngreso('niño')" style="font-size:3.5rem; background:none; border:none; cursor:pointer;">⚡</button></div>
 </div>
@@ -68,7 +68,7 @@
     <div id="socio-display">Socio: ---</div>
     <h1 id="titulo-header" style="font-size:1.8rem; margin-bottom:10px; letter-spacing: 2px;">MONOS FIT</h1>
     <select id="selector-dia-manual" onchange="cambiarDiaManual(this.value)" style="width:auto; background:rgba(255,255,255,0.2); border:none; color:white; font-weight:bold; border-radius:10px; padding: 5px 15px; font-size: 1rem;">
-        <option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option><option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option><option value="7">Día 7</option>
+        <option value="1">📅 Día 1</option><option value="2">📅 Día 2</option><option value="3">📅 Día 3</option><option value="4">📅 Día 4</option><option value="5">📅 Día 5</option><option value="6">📅 Día 6</option><option value="7">📅 Día 7</option>
     </select>
     <div id="frase-momento">"Tu única competencia eres tú mismo."</div>
 </header>
@@ -91,37 +91,73 @@
     <div class="card">
         <h3>➕ Nuevo Ejercicio</h3>
         <select id="r_dia">
-            <option value="1">Día 1</option><option value="2">Día 2</option><option value="3">Día 3</option>
-            <option value="4">Día 4</option><option value="5">Día 5</option><option value="6">Día 6</option><option value="7">Día 7</option>
+            <option value="1">📅 Día 1</option><option value="2">📅 Día 2</option><option value="3">📅 Día 3</option>
+            <option value="4">📅 Día 4</option><option value="5">📅 Día 5</option><option value="6">📅 Día 6</option><option value="7">📅 Día 7</option>
         </select>
-        <input type="text" id="r_nombre" placeholder="Nombre del ejercicio">
-        <input type="text" id="r_series" placeholder="Series y Repeticiones (ej: 4x12)">
+        <input type="text" id="r_nombre" placeholder="🏋️ Ejercicio (ej: Sentadillas)">
+        <input type="text" id="r_series" placeholder="🔢 Series x Reps (ej: 4x12)">
         <input type="file" id="r_file" accept="image/*">
-        <button class="btn btn-main" onclick="guardarEjercicio()">Guardar Ejercicio</button>
+        <button class="btn btn-main" onclick="guardarEjercicio()">✅ Guardar Ejercicio</button>
         <button class="btn btn-danger" onclick="eliminarTodasRutinas()">🗑️ Limpiar Plan Completo</button>
     </div>
     <div id="visor-plan-detallado"></div>
 </section>
 
-<section id="dieta"><div class="card"><h3>🍴 Dieta</h3><select id="d_menu_sel" onchange="cargarFormDieta()"><option value="menuA">Menú A</option><option value="menuB">Menú B</option></select><textarea id="d_des" placeholder="Desayuno" rows="3"></textarea><textarea id="d_s1" placeholder="Snack 1" rows="3"></textarea><textarea id="d_com" placeholder="Comida" rows="3"></textarea><textarea id="d_s2" placeholder="Snack 2" rows="3"></textarea><textarea id="d_cen" placeholder="Cena" rows="3"></textarea><button class="btn btn-main" onclick="guardarDieta()">Guardar Dieta</button></div></section>
-<section id="suples"><div class="card"><h3>💊 Suplementación</h3><input id="s_nombre" placeholder="Nombre"><input id="s_momento" placeholder="Instrucciones"><button class="btn btn-main" onclick="agregarSuplemento()">Añadir Suple</button></div><div id="lista-suples"></div></section>
+<section id="dieta">
+    <div class="card">
+        <h3>🍴 Dieta</h3>
+        <select id="d_menu_sel" onchange="cargarFormDieta()">
+            <option value="menuA">📜 Menú A</option>
+            <option value="menuB">📜 Menú B</option>
+        </select>
+        <textarea id="d_des" placeholder="🌅 Desayuno" rows="3"></textarea>
+        <textarea id="d_s1" placeholder="🥨 Snack 1" rows="3"></textarea>
+        <textarea id="d_com" placeholder="🍲 Comida" rows="3"></textarea>
+        <textarea id="d_s2" placeholder="🍇 Snack 2" rows="3"></textarea>
+        <textarea id="d_cen" placeholder="🌙 Cena" rows="3"></textarea>
+        <button class="btn btn-main" onclick="guardarDieta()">💾 Guardar Dieta</button>
+    </div>
+</section>
+
+<section id="suples">
+    <div class="card">
+        <h3>💊 Suplementación</h3>
+        <input id="s_nombre" placeholder="🏷️ Nombre del Suplemento">
+        <input id="s_momento" placeholder="⏰ Instrucciones / Toma">
+        <button class="btn btn-main" onclick="agregarSuplemento()">➕ Añadir Suple</button>
+    </div>
+    <div id="lista-suples"></div>
+</section>
 
 <section id="progreso">
     <div class="card">
         <h3>📉 Evolución</h3>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <input type="number" id="e_peso" placeholder="Peso (kg)" step="0.1">
-            <input type="number" id="e_cintura" placeholder="Cintura (cm)" step="0.1">
-            <input type="number" id="e_cadera" placeholder="Cadera (cm)" step="0.1">
-            <input type="number" id="e_grasa" placeholder="% Grasa" step="0.1">
-            <input type="number" id="e_musculo" placeholder="% Músculo" step="0.1">
+            <input type="number" id="e_peso" placeholder="⚖️ Peso (kg)" step="0.1">
+            <input type="number" id="e_cintura" placeholder="📏 Cintura (cm)" step="0.1">
+            <input type="number" id="e_cadera" placeholder="🍑 Cadera (cm)" step="0.1">
+            <input type="number" id="e_grasa" placeholder="🔥 % Grasa" step="0.1">
+            <input type="number" id="e_musculo" placeholder="💪 % Músculo" step="0.1">
         </div>
-        <button class="btn btn-main" onclick="registrarEvo()">Guardar Métricas</button>
+        <button class="btn btn-main" onclick="registrarEvo()">💾 Guardar Métricas</button>
     </div>
     <div id="lista-evo"></div>
 </section>
 
-<section id="ajustes"><div class="card"><h3>👤 Socio</h3><input type="text" id="edit-socio-num"><button class="btn btn-main" onclick="actualizarSocio()">Actualizar Número</button></div><div class="card"><h3>⚙️ Sistema</h3><button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button><button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button><input type="file" id="importInput" style="display:none" onchange="importarData(event)"><button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button></div></section>
+<section id="ajustes">
+    <div class="card">
+        <h3>👤 Socio</h3>
+        <input type="text" id="edit-socio-num" placeholder="🆔 Editar N° Socio">
+        <button class="btn btn-main" onclick="actualizarSocio()">🔄 Actualizar Número</button>
+    </div>
+    <div class="card">
+        <h3>⚙️ Sistema</h3>
+        <button class="btn btn-main" onclick="exportarData()">📤 Exportar Backup</button>
+        <button class="btn" style="background:#22c55e; color:white;" onclick="document.getElementById('importInput').click()">📥 Importar Backup</button>
+        <input type="file" id="importInput" style="display:none" onchange="importarData(event)">
+        <button class="btn btn-danger" onclick="eliminarTodo()">⚠️ Reset de Fábrica</button>
+    </div>
+</section>
 
 <script>
 const bc = new BroadcastChannel('monos_fit_global');
@@ -204,13 +240,10 @@ function renderEntrenamiento() {
     const bar = document.getElementById('bar');
     if(bar) bar.style.width = p + "%";
 
-    // --- LÓGICA DE AVANCE Y RESET AUTOMÁTICO ---
     if(p === 100 && ejercicios.length > 0) {
         setTimeout(() => {
             let sig = DB.diaActual + 1;
             let encontrado = false;
-            
-            // Buscar si hay más días con ejercicios
             for(let i = sig; i <= 7; i++){
                 if(DB.rutinas[i.toString()] && DB.rutinas[i.toString()].length > 0){
                     DB.diaActual = i; 
@@ -220,25 +253,17 @@ function renderEntrenamiento() {
                     break;
                 }
             }
-
-            // Si no encontró más días, resetear todo al Día 1
             if(!encontrado) { 
                 alert("¡Felicidades! Has terminado todos los días del plan."); 
-                
-                // 1. Regresar al Día 1
                 DB.diaActual = 1;
                 document.getElementById('selector-dia-manual').value = 1;
-                
-                // 2. Quitar todas las palomitas de todos los días
                 for(let d = 1; d <= 7; d++) {
                     if(DB.rutinas[d.toString()]) {
                         DB.rutinas[d.toString()].forEach(ex => ex.done = false);
                     }
                 }
             }
-            
-            save(); 
-            renderTodo();
+            save(); renderTodo();
         }, 400);
     }
 }
@@ -254,7 +279,7 @@ function renderPlan() {
     let html = ""; 
     for(let d = 1; d <= 7; d++) { 
         if(DB.rutinas[d.toString()] && DB.rutinas[d.toString()].length > 0) {
-            html += `<div class='card'><b>DÍA ${d}</b><br>`;
+            html += `<div class='card'><b>📅 DÍA ${d}</b><br>`;
             DB.rutinas[d.toString()].forEach((e, i) => {
                 html += `<div style='display:flex; justify-content:space-between; align-items:center; margin:8px 0; border-bottom:1px solid #eee; padding-bottom:5px;'>
                         <span>${e.nombre} <small>(${e.series})</small></span>
@@ -299,7 +324,7 @@ function guardarDieta() {
         snack2: document.getElementById('d_s2').value, 
         cena: document.getElementById('d_cen').value 
     }; 
-    save(); alert("Dieta guardada"); 
+    save(); alert("¡Dieta guardada!"); 
 }
 
 function cargarFormDieta() { 
@@ -314,7 +339,7 @@ function cargarFormDieta() {
 
 function agregarSuplemento() { 
     const n = document.getElementById('s_nombre').value; 
-    if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); document.getElementById('s_nombre').value = ""; } 
+    if(n) { DB.suplementos.push({ nombre:n, momento: document.getElementById('s_momento').value }); save(); renderSuples(); document.getElementById('s_nombre').value = ""; document.getElementById('s_momento').value = ""; } 
 }
 function renderSuples() { document.getElementById('lista-suples').innerHTML = DB.suplementos.map((s, i) => `<div class="ex-card"><div style="flex:1"><b>${s.nombre}</b><br><small>${s.momento}</small></div><button style="border:none; background:none; color:red;" onclick="DB.suplementos.splice(${i},1);save();renderSuples();">🗑️</button></div>`).join(''); }
 
